@@ -5,13 +5,13 @@ import {PaginationResultType} from "../application/pagination";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
 
+
 @injectable()
 export class BloggersController {
     constructor(@inject(TYPES.IBloggersService) private bloggersService: IBloggersService, @inject(TYPES.IPostsService) private postsService: IPostsService) {
     }
 
     async getAllBloggers(req: Request, res: Response) {
-        console.log(req.ip)
         const {pageNumber, pageSize, searchNameTerm} = req.query
         const allBloggers = await this.bloggersService.getAllBloggers(searchNameTerm, pageNumber, pageSize)
         return res.send(allBloggers)

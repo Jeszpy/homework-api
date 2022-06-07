@@ -5,6 +5,7 @@ import {CommentsType} from "../types/comments";
 import {BloggerType, BloggerWithDateType} from "../types/bloggers";
 import {UserType} from "../types/user";
 import {PostType, PostWithDateType} from "../types/posts";
+import {ConnectionLimitsType} from "../types/connectionLimits";
 
 const mongoUri = settings.mongoUri
 
@@ -17,6 +18,7 @@ export const postsCollection = db.collection<PostType>('posts-management')
 export const deletedPostsCollection = db.collection<PostWithDateType>('deleted-posts')
 export const usersCollection = db.collection<UserType>('users-management')
 export const commentsCollection = db.collection<CommentsType>('comments-management')
+export const connectionLimitsCollection = db.collection<ConnectionLimitsType>('connection-limits-management')
 
 export async function runDb() {
     try {
