@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import {PostsRepository} from "./repositories/posts-repository";
 import {IPostsRepository, PostsService} from "./domain/posts-service";
 import {IPostsService, PostsController} from "./presentation/PostsController";
