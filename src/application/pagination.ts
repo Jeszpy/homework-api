@@ -1,0 +1,58 @@
+import {CommentsWithoutPostIdType} from "../types/comments";
+import {BloggerType} from "../types/bloggers";
+import {PostType} from "../types/posts";
+import {UserWithoutPasswordType} from "../types/user";
+
+
+type items = BloggerType[] | PostType[] | UserWithoutPasswordType[] | CommentsWithoutPostIdType[]
+
+export type PaginationPostsType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: PostType[]
+}
+
+export type PaginationBloggersType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: BloggerType[]
+}
+
+export type PaginationUsersType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: UserWithoutPasswordType[]
+}
+
+export type PaginationCommentsType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: UserWithoutPasswordType[]
+}
+
+export type PaginationResultType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: items
+}
+
+export const pagination = (pageNumber: number, pageSize: number, totalCount: any, items: items): PaginationResultType => {
+    const pagesCount = Math.ceil(totalCount / pageSize)
+    return {
+        pagesCount,
+        page: pageNumber,
+        pageSize,
+        totalCount,
+        items
+    }
+}
