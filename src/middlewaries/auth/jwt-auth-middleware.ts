@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {UsersService} from "../../domain/users-service";
 import {JWTService} from "../../application/jwt-service";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../../IoCContainer";
+import {TYPES} from "../../types/ioc";
 
 @injectable()
 export class JWTAuthMiddleware {

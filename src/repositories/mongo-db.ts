@@ -8,19 +8,20 @@ import {PostType, PostWithDateType} from "../types/posts";
 
 const mongoUri = settings.mongoUri
 
-// const client = new MongoClient(mongoUri);
+const client = new MongoClient(mongoUri);
 
-// const db = client.db("bloggers")
-// export const bloggersCollection = db.collection<BloggerType>('bloggers-management')
-// export const deletedBloggersCollection = db.collection<BloggerWithDateType>('deleted-bloggers')
-// export const postsCollection = db.collection<PostType>('posts-management')
-// export const deletedPostsCollection = db.collection<PostWithDateType>('deleted-posts')
-// export const usersCollection = db.collection<UserType>('users-management')
-// export const commentsCollection = db.collection<CommentsType>('comments-management')
+const db = client.db("bloggers")
+export const bloggersCollection = db.collection<BloggerType>('bloggers-management')
+export const deletedBloggersCollection = db.collection<BloggerWithDateType>('deleted-bloggers')
+export const postsCollection = db.collection<PostType>('posts-management')
+export const deletedPostsCollection = db.collection<PostWithDateType>('deleted-posts')
+export const usersCollection = db.collection<UserType>('users-management')
+export const commentsCollection = db.collection<CommentsType>('comments-management')
 
 export async function runDb() {
     try {
-        await mongoose.connect(mongoUri);
+        // await mongoose.connect(mongoUri);
+        await client.connect()
         console.log("Connected successfully to mongo server");
     } catch (e) {
         console.log("Cant connect to mongo server:\n", e);

@@ -1,7 +1,8 @@
 import {Router} from "express";
 import {authValidationParams} from "../application/validations/auth-validation-params";
-import {ioc, TYPES} from "../IoCContainer";
+import {ioc} from "../IoCContainer";
 import {AuthController} from "../presentation/AuthController";
+import {TYPES} from "../types/ioc";
 
 export const authRouter = Router({})
 

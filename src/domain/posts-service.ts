@@ -5,11 +5,11 @@ import {PostType} from "../types/posts";
 import {IPostsService} from "../presentation/PostsController";
 import {IBloggersRepository} from "./bloggers-service";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class PostsService implements IPostsService{
-    constructor(@inject(TYPES.IPostsRepository) private postsRepository: IPostsRepository, private bloggersRepository: IBloggersRepository) {
+    constructor(@inject(TYPES.IPostsRepository) private postsRepository: IPostsRepository, @inject(TYPES.IBloggersRepository) private bloggersRepository: IBloggersRepository) {
     }
 
     async getAllPosts(searchNameTerm: any, pageNumber: any, pageSize: any): Promise<PaginationResultType> {

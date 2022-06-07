@@ -5,10 +5,11 @@ import {
     paginationWithSearchNameTermValidation
 } from "../application/validations/pagination-validation";
 import {postWithoutBloggerIdValidation} from "../application/validations/posts-validation-params";
-import {ioc, TYPES} from "../IoCContainer";
+import {ioc} from "../IoCContainer";
 import {BloggersController} from "../presentation/BloggersController";
 import {PaginationMiddleware} from "../middlewaries/pagination-middleware";
 import {BasicAuthMiddleware} from "../middlewaries/auth/basic-auth-middleware";
+import {TYPES} from "../types/ioc";
 
 
 export const bloggersRouter = Router({})

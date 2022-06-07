@@ -1,9 +1,11 @@
 import {JWTService} from "../application/jwt-service";
 import {Request, Response} from "express";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../types/ioc";
 
-
+@injectable()
 export class AuthController {
-    constructor(private jwtService: JWTService) {
+    constructor(@inject(TYPES.JWTService)private jwtService: JWTService) {
     }
 
     async login(req: Request, res: Response) {

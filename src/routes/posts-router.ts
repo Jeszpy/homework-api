@@ -2,11 +2,12 @@ import {Router} from 'express'
 import {postValidation} from '../application/validations/posts-validation-params'
 import {paginationValidation} from "../application/validations/pagination-validation";
 import {commentsValidation} from "../application/validations/comments-validation-params";
-import {ioc, TYPES} from "../IoCContainer";
+import {ioc} from "../IoCContainer";
 import {PostsController} from "../presentation/PostsController";
 import {PaginationMiddleware} from "../middlewaries/pagination-middleware";
 import {BasicAuthMiddleware} from "../middlewaries/auth/basic-auth-middleware";
 import {JWTAuthMiddleware} from "../middlewaries/auth/jwt-auth-middleware";
+import {TYPES} from "../types/ioc";
 
 export const postsRouter = Router({})
 

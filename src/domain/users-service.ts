@@ -5,7 +5,7 @@ import {UserType, UserWithoutPasswordType} from "../types/user";
 import {Filter} from "mongodb";
 import {IUsersService} from "../presentation/UsersController";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class UsersService implements IUsersService {

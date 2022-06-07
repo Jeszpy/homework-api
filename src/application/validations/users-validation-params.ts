@@ -22,5 +22,5 @@ const passwordValidation = body('password')
 export const userValidationParams = [
     loginValidation,
     passwordValidation,
-    inputValidatorMiddleware,
+    inputValidatorMiddleware
 ]

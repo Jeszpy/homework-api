@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import {settings} from "../settings";
 import {IUsersRepository} from "../domain/users-service";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class JWTService {

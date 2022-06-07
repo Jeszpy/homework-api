@@ -1,10 +1,11 @@
 import {Router} from "express";
 import {paginationValidation} from "../application/validations/pagination-validation";
 import {userValidationParams} from "../application/validations/users-validation-params";
-import {ioc, TYPES} from "../IoCContainer";
+import {ioc} from "../IoCContainer";
 import {UsersController} from "../presentation/UsersController";
 import {PaginationMiddleware} from "../middlewaries/pagination-middleware";
 import {BasicAuthMiddleware} from "../middlewaries/auth/basic-auth-middleware";
+import {TYPES} from "../types/ioc";
 
 export const usersRouter = Router({})
 

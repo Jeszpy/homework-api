@@ -5,7 +5,7 @@ import {Filter} from "mongodb";
 import {IPostsRepository} from "./posts-service";
 import {IBloggersService} from "../presentation/BloggersController";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class BloggersService implements IBloggersService{
@@ -44,8 +44,6 @@ export class BloggersService implements IBloggersService{
         const blogger = await this.bloggersRepository.getOneBloggerById(id)
         if (blogger) {
             try {
-                let bloggerForDelete: BloggerWithDateType = {...blogger, deletedAt: new Date()}
-                await this.bloggersRepository.insertIntoDeletedBloggers(bloggerForDelete)
                 await this.bloggersRepository.deleteOneBloggerById(id)
                 return true
             } catch (e) {
@@ -73,6 +71,5 @@ export interface IBloggersRepository {
     getOneBloggerById(id: string): Promise<BloggerType | null>,
     updateOneBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean>
     deleteOneBloggerById(id: string): Promise<boolean>,
-    insertIntoDeletedBloggers(bloggerForDelete: BloggerWithDateType): Promise<boolean>,
     getTotalCount(filter: Filter<BloggerType>): Promise<number>
 }

@@ -1,11 +1,9 @@
 import {Request, Response} from "express";
 import {PaginationResultType} from "../application/pagination";
 import {PostType} from "../types/posts";
-import {UserType} from "../types/user";
-import {CommentsWithoutPostIdType} from "../types/comments";
 import {ICommentsService} from "./CommentsController";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class PostsController {

@@ -1,3 +1,4 @@
+import {Container} from "inversify";
 import "reflect-metadata";
 import {PostsRepository} from "./repositories/posts-repository";
 import {IPostsRepository, PostsService} from "./domain/posts-service";
@@ -16,14 +17,21 @@ import {AuthController} from "./presentation/AuthController";
 import {JWTAuthMiddleware} from "./middlewaries/auth/jwt-auth-middleware";
 import {BasicAuthMiddleware} from "./middlewaries/auth/basic-auth-middleware";
 import {PaginationMiddleware} from "./middlewaries/pagination-middleware";
-import {Container} from "inversify";
+import {TYPES} from "./types/ioc";
+import {
+    bloggersCollection,
+    commentsCollection,
+    deletedBloggersCollection, deletedPostsCollection, postsCollection,
+    usersCollection
+} from "./repositories/mongo-db";
+
 
 
 // Repos
-// const postsRepository = new PostsRepository(postsCollection, deletedPostsCollection)
-// const commentsRepository = new CommentsRepository(commentsCollection)
-// const bloggersRepository = new BloggersRepository(bloggersCollection, deletedBloggersCollection)
-// const usersRepository = new UsersRepository(usersCollection)
+const postsRepository = new PostsRepository(postsCollection, deletedPostsCollection)
+const commentsRepository = new CommentsRepository(commentsCollection)
+ const bloggersRepository = new BloggersRepository(bloggersCollection)
+const usersRepository = new UsersRepository(usersCollection)
 
 // Services
 // const commentsService = new CommentsService(commentsRepository)
@@ -58,37 +66,19 @@ import {Container} from "inversify";
     // paginationMiddleware
 // }
 
-export const TYPES = {
-    IUsersRepository: Symbol.for('IUsersRepository'),
-    IUsersService: Symbol.for('IUsersService'),
-    UsersController: Symbol.for('UsersController'),
-    IPostsRepository: Symbol.for('IPostsRepository'),
-    IPostsService: Symbol.for('IPostsService'),
-    PostsController: Symbol.for('PostsController'),
-    IBloggersRepository: Symbol.for('IBloggersRepository'),
-    IBloggersService: Symbol.for('IBloggersService'),
-    BloggersController: Symbol.for('BloggersController'),
-    ICommentsRepository: Symbol.for('ICommentsRepository'),
-    ICommentsService: Symbol.for('ICommentsService'),
-    CommentsController: Symbol.for('CommentsController'),
-    JWTAuthMiddleware: Symbol.for('jwtAuthMiddleware'),
-    JWTService: Symbol.for('JWTService'),
-    AuthController: Symbol.for('AuthController'),
-    BasicAuthMiddleware: Symbol.for('BasicAuthMiddleware'),
-    PaginationMiddleware: Symbol.for('PaginationMiddleware'),
-}
+
 
 const invContainer = new Container()
-invContainer.bind<IUsersRepository>(TYPES.IUsersRepository).to(UsersRepository)
+invContainer.bind<IUsersRepository>(TYPES.IUsersRepository).toConstantValue(usersRepository)
 invContainer.bind<IUsersService>(TYPES.IUsersService).to(UsersService)
 invContainer.bind<UsersController>(TYPES.UsersController).to(UsersController)
-invContainer.bind<IPostsRepository>(TYPES.IPostsRepository).to(PostsRepository)
+invContainer.bind<IPostsRepository>(TYPES.IPostsRepository).toConstantValue(postsRepository)
 invContainer.bind<IPostsService>(TYPES.IPostsService).to(PostsService)
 invContainer.bind<PostsController>(TYPES.PostsController).to(PostsController)
-invContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).to(BloggersRepository)
+invContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).toConstantValue(bloggersRepository)
 invContainer.bind<IBloggersService>(TYPES.IBloggersService).to(BloggersService)
 invContainer.bind<BloggersController>(TYPES.BloggersController).to(BloggersController)
-invContainer.bind<ICommentsRepository>(TYPES.ICommentsRepository).to(CommentsRepository)
+invContainer.bind<ICommentsRepository>(TYPES.ICommentsRepository).toConstantValue(commentsRepository)
 invContainer.bind<ICommentsService>(TYPES.ICommentsService).to(CommentsService)
 invContainer.bind<CommentsController>(TYPES.CommentsController).to(CommentsController)
 invContainer.bind<JWTAuthMiddleware>(TYPES.JWTAuthMiddleware).to(JWTAuthMiddleware)

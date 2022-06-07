@@ -5,7 +5,7 @@ import {pagination, PaginationResultType} from "../application/pagination";
 import {UserType} from "../types/user";
 import {ICommentsService} from "../presentation/CommentsController";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class CommentsService implements ICommentsService{

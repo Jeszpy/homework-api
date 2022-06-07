@@ -3,7 +3,7 @@ import {CommentsWithoutPostIdType} from "../types/comments";
 import {UserType} from "../types/user";
 import {PaginationResultType} from "../application/pagination";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class CommentsController {

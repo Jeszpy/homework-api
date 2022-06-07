@@ -2,11 +2,14 @@ import {BloggerType, BloggerWithDateType} from "../types/bloggers";
 import * as MongoClient from 'mongodb'
 import {Filter} from "mongodb";
 import {IBloggersRepository} from "../domain/bloggers-service";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class BloggersRepository implements IBloggersRepository{
-    constructor(private bloggersCollection: MongoClient.Collection<BloggerType>, private deletedBloggersCollection: MongoClient.Collection<BloggerWithDateType>) {
+    // constructor(private bloggersCollection: MongoClient.Collection<BloggerType>, private deletedBloggersCollection: MongoClient.Collection<BloggerWithDateType>) {
+    // }
+    constructor(private bloggersCollection: MongoClient.Collection<BloggerType>) {
     }
 
     async getAllBloggers(filter: Filter<BloggerType>, pageNumber: number, pageSize: number): Promise<BloggerType[]> {
@@ -43,11 +46,6 @@ export class BloggersRepository implements IBloggersRepository{
         } catch (e) {
             return false
         }
-    }
-
-    async insertIntoDeletedBloggers(blogger: BloggerWithDateType): Promise<boolean> {
-        await this.deletedBloggersCollection.insertOne(blogger)
-        return true
     }
 
     async getTotalCount(filter: Filter<BloggerType>): Promise<number> {

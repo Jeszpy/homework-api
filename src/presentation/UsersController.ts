@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {PaginationResultType} from "../application/pagination";
 import {UserWithoutPasswordType} from "../types/user";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class UsersController {

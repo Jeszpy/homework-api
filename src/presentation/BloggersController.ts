@@ -3,7 +3,7 @@ import {BloggerType} from "../types/bloggers";
 import {IPostsService} from "./PostsController";
 import {PaginationResultType} from "../application/pagination";
 import {inject, injectable} from "inversify";
-import {TYPES} from "../IoCContainer";
+import {TYPES} from "../types/ioc";
 
 @injectable()
 export class BloggersController {
