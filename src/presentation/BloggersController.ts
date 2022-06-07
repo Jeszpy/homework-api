@@ -11,6 +11,7 @@ export class BloggersController {
     }
 
     async getAllBloggers(req: Request, res: Response) {
+        console.log(req.ip)
         const {pageNumber, pageSize, searchNameTerm} = req.query
         const allBloggers = await this.bloggersService.getAllBloggers(searchNameTerm, pageNumber, pageSize)
         return res.send(allBloggers)
