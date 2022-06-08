@@ -1,3 +1,4 @@
+
 export const TYPES = {
     IUsersRepository: Symbol.for('IUsersRepository'),
     IUsersService: Symbol.for('IUsersService'),
@@ -17,5 +18,5 @@ export const TYPES = {
     BasicAuthMiddleware: Symbol.for('BasicAuthMiddleware'),
     PaginationMiddleware: Symbol.for('PaginationMiddleware'),
     BloggersCollection: Symbol.for('BloggersCollection'),
-
+    CheckConnectionLimitsMiddleware: Symbol.for('CheckConnectionLimitsMiddleware'),
 }

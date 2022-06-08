@@ -24,6 +24,7 @@ import {
     deletedBloggersCollection, deletedPostsCollection, postsCollection,
     usersCollection
 } from "./repositories/mongo-db";
+import {CheckConnectionLimitsMiddleware} from "./middlewaries/auth/check-connection-limits-middleware";
 
 
 
@@ -86,6 +87,8 @@ invContainer.bind<JWTService>(TYPES.JWTService).to(JWTService)
 invContainer.bind<AuthController>(TYPES.AuthController).to(AuthController)
 invContainer.bind<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware).to(BasicAuthMiddleware)
 invContainer.bind<PaginationMiddleware>(TYPES.PaginationMiddleware).to(PaginationMiddleware)
+invContainer.bind<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMiddleware).to(CheckConnectionLimitsMiddleware)
+// in
 
 
 export {invContainer as ioc}

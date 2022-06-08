@@ -5,13 +5,13 @@ import {CommentsType} from "../types/comments";
 import {BloggerType, BloggerWithDateType} from "../types/bloggers";
 import {UserType} from "../types/user";
 import {PostType, PostWithDateType} from "../types/posts";
-import {ConnectionLimitsType} from "../types/connectionLimits";
+import {BlockedConnectionType, ConnectionLimitsType} from "../types/connectionLimits";
 
 const mongoUri = settings.mongoUri
 
 const client = new MongoClient(mongoUri);
 
-const db = client.db("bloggers")
+const db = client.db("homework-api")
 export const bloggersCollection = db.collection<BloggerType>('bloggers-management')
 export const deletedBloggersCollection = db.collection<BloggerWithDateType>('deleted-bloggers')
 export const postsCollection = db.collection<PostType>('posts-management')
@@ -19,6 +19,7 @@ export const deletedPostsCollection = db.collection<PostWithDateType>('deleted-p
 export const usersCollection = db.collection<UserType>('users-management')
 export const commentsCollection = db.collection<CommentsType>('comments-management')
 export const connectionLimitsCollection = db.collection<ConnectionLimitsType>('connection-limits-management')
+export const blockedConnectionCollection = db.collection<BlockedConnectionType>('connections-black-list-management')
 
 export async function runDb() {
     try {
