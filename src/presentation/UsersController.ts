@@ -18,7 +18,7 @@ export class UsersController {
     async createUser(req: Request, res: Response) {
         const {login, email, password} = req.body
         const newUser = await this.usersService.createUser(login, email, password)
-        return res.status(201).send(newUser)
+        return newUser? res.status(201).send(newUser) : res.sendStatus(400)
     }
 
     async deleteUserById(req: Request, res: Response) {
@@ -31,7 +31,7 @@ export class UsersController {
 export interface IUsersService {
     getAllUsers(pageNumber: any, pageSize: any): Promise<PaginationResultType>,
 
-    createUser(login: string, email: string, password: string): Promise<UserIdAndLoginType>,
+    createUser(login: string, email: string, password: string): Promise<UserIdAndLoginType | null>,
 
     deleteUserById(id: string): Promise<boolean>,
 

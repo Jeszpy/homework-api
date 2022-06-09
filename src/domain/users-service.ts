@@ -24,12 +24,17 @@ export class UsersService implements IUsersService {
         return await this.usersRepository.getOneUserById(id)
     }
 
-    async createUser(login: string, email: string, password: string): Promise<UserIdAndLoginType> {
+    async createUser(login: string, email: string, password: string): Promise<UserIdAndLoginType | null> {
+        const userInDB = await this.usersRepository.findOneUserByLoginOrEmail(login, email)
+        if (userInDB){
+            return null
+        }
         const hash = await argon2.hash(password);
         const newUser: UserAccountDBType = {
             accountData: {
                 id: uuidv4(),
                 login,
+                email,
                 password: hash,
                 createdAt: new Date()
             },
@@ -74,6 +79,8 @@ export interface IUsersRepository {
     getTotalCount(filter: Filter<UserAccountDBType>): Promise<number>,
 
     getOneUserForJWT(login: string): Promise<UserAccountType | null>
+
+    findOneUserByLoginOrEmail(login: string, email: string): Promise<boolean>
 }
 
 export interface IEmailsRepository {
