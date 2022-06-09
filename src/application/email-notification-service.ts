@@ -6,7 +6,6 @@ import {EmailType} from "../types/emails";
 import fs from 'fs/promises'
 import {settings} from "../settings";
 import * as cheerio from 'cheerio';
-import {log} from "util";
 
 @injectable()
 export class EmailNotificationService {
@@ -47,8 +46,6 @@ export class EmailNotificationService {
 
     }
 
-
-    // TODO: create nice template with pug/handlebars
 
     private async createHtmlTemplate(subject: string, userName: string, confirmationCode: string) {
         const file = await fs.readFile(`./src/application/HTMLTemplates/${subject}.html`, {encoding: 'utf8'})

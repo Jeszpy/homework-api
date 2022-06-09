@@ -16,6 +16,7 @@ const sendEmails = () => {
 }
 
 export const scheduler = async () => {
-    console.log('scheduller run')
-    sendEmails()
+    console.log('scheduler off manually')
+    // console.log('scheduler run')
+    // sendEmails()
 }
