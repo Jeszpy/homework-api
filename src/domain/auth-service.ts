@@ -1,4 +1,3 @@
-import isEqual from "date-fns/isEqual";
 import {inject, injectable} from "inversify";
 import {IAuthService} from "../presentation/AuthController";
 import {TYPES} from "../types/ioc";
@@ -9,8 +8,6 @@ import {UserAccountDBType} from "../types/user";
 export class AuthService implements IAuthService {
     constructor(@inject(TYPES.IUsersRepository) private usersRepository: IAuthRepository) {
     }
-
-
 
     async confirmEmail(code: string): Promise<boolean | null> {
         const confirmationDate = new Date()

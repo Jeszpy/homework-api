@@ -23,4 +23,5 @@ export const TYPES = {
     BloggersCollection: Symbol.for('BloggersCollection'),
     CheckConnectionLimitsMiddleware: Symbol.for('CheckConnectionLimitsMiddleware'),
     IConnectionsControlRepository: Symbol.for('IConnectionsControlRepository'),
+    IEmailsRepository: Symbol.for('IEmailsRepository'),
 }

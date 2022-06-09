@@ -10,7 +10,7 @@ import {BloggersRepository} from "./repositories/bloggers-repository";
 import {BloggersService, IBloggersRepository} from "./domain/bloggers-service";
 import {BloggersController, IBloggersService} from "./presentation/BloggersController";
 import {UsersRepository} from "./repositories/users-repository";
-import {IUsersRepository, UsersService} from "./domain/users-service";
+import {IEmailsRepository, IUsersRepository, UsersService} from "./domain/users-service";
 import {IUsersService, UsersController} from "./presentation/UsersController";
 import {JWTService} from "./application/jwt-service";
 import {AuthController, IAuthService} from "./presentation/AuthController";
@@ -22,7 +22,7 @@ import {
     blockedConnectionCollection,
     bloggersCollection,
     commentsCollection, connectionLimitsCollection,
-    deletedPostsCollection,
+    deletedPostsCollection, emailsCollection,
     postsCollection,
     usersCollection
 } from "./repositories/mongo-db";
@@ -32,6 +32,7 @@ import {
 } from "./middlewaries/auth/check-connection-limits-middleware";
 import {AuthService, IAuthRepository} from "./domain/auth-service";
 import {ConnectionsControlRepository} from "./repositories/connections-control-repository";
+import {EmailsRepository} from "./repositories/emails-repository";
 
 
 // Repos
@@ -40,6 +41,7 @@ const commentsRepository = new CommentsRepository(commentsCollection)
 const bloggersRepository = new BloggersRepository(bloggersCollection)
 const usersRepository = new UsersRepository(usersCollection)
 const connectionsControlRepository = new ConnectionsControlRepository(connectionLimitsCollection, blockedConnectionCollection)
+const emailsRepository = new EmailsRepository(emailsCollection)
 
 // Services
 // const commentsService = new CommentsService(commentsRepository)
@@ -98,5 +100,6 @@ invContainer.bind<PaginationMiddleware>(TYPES.PaginationMiddleware).to(Paginatio
 invContainer.bind<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMiddleware).to(CheckConnectionLimitsMiddleware)
 
 invContainer.bind<IConnectionsControlRepository>(TYPES.IConnectionsControlRepository).toConstantValue(connectionsControlRepository)
+invContainer.bind<IEmailsRepository>(TYPES.IEmailsRepository).toConstantValue(emailsRepository)
 
 export {invContainer as ioc}

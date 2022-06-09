@@ -9,8 +9,8 @@ import {TYPES} from "../types/ioc";
 import addMinutes from 'date-fns/addMinutes';
 
 @injectable()
-export class UsersService implements IUsersService{
-    constructor(@inject(TYPES.IUsersRepository)  private usersRepository: IUsersRepository) {
+export class UsersService implements IUsersService {
+    constructor(@inject(TYPES.IUsersRepository) private usersRepository: IUsersRepository, @inject(TYPES.IEmailsRepository) private emailsRepository: IEmailsRepository) {
     }
 
     async getAllUsers(pageNumber: any, pageSize: any): Promise<PaginationResultType> {
@@ -23,11 +23,10 @@ export class UsersService implements IUsersService{
         return await this.usersRepository.getOneUserById(id)
     }
 
-    async createUser(login: string, email: string,password: string): Promise<UserIdAndLoginType> {
-        // const user =
+    async createUser(login: string, email: string, password: string): Promise<UserIdAndLoginType> {
         const hash = await argon2.hash(password);
         const newUser: UserAccountDBType = {
-            accountData:{
+            accountData: {
                 id: uuidv4(),
                 login,
                 password: hash,
@@ -43,7 +42,10 @@ export class UsersService implements IUsersService{
 
         }
         console.log(newUser.emailConfirmation.confirmationCode)
-        return await this.usersRepository.createUser(newUser)
+        const user = await this.usersRepository.createUser(newUser)
+        await this.emailsRepository.insertEmailToQueue(email, 'registration', user.login, newUser.emailConfirmation.confirmationCode)
+        return user
+
     }
 
     async deleteUserById(id: string): Promise<boolean> {
@@ -63,4 +65,8 @@ export interface IUsersRepository {
     getTotalCount(filter: Filter<UserAccountDBType>): Promise<number>,
 
     getOneUserForJWT(login: string): Promise<UserAccountType | null>
+}
+
+export interface IEmailsRepository {
+    insertEmailToQueue(email: string, topic: string, userLogin: string, confirmationCode: string): Promise<boolean>
 }

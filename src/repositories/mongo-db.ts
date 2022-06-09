@@ -6,6 +6,7 @@ import {BloggerType, BloggerWithDateType} from "../types/bloggers";
 import {UserAccountDBType} from "../types/user";
 import {PostType, PostWithDateType} from "../types/posts";
 import {BlockedConnectionType, ConnectionLimitsType} from "../types/connectionLimits";
+import {EmailType} from "../types/emails";
 
 const mongoUri = settings.mongoUri
 
@@ -20,6 +21,7 @@ export const usersCollection = db.collection<UserAccountDBType>('users-managemen
 export const commentsCollection = db.collection<CommentsType>('comments-management')
 export const connectionLimitsCollection = db.collection<ConnectionLimitsType>('connection-limits-management')
 export const blockedConnectionCollection = db.collection<BlockedConnectionType>('connections-black-list-management')
+export const emailsCollection = db.collection<EmailType>('emails-management')
 
 export async function runDb() {
     try {
