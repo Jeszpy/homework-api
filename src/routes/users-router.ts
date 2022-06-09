@@ -1,6 +1,8 @@
 import {Router} from "express";
 import {paginationValidation} from "../application/validations/pagination-validation";
-import {userValidationParams} from "../application/validations/users-validation-params";
+import {
+    userRegistrationValidationParams
+} from "../application/validations/users-validation-params";
 import {ioc} from "../IoCContainer";
 import {UsersController} from "../presentation/UsersController";
 import {PaginationMiddleware} from "../middlewaries/pagination-middleware";
@@ -16,5 +18,5 @@ const basicAuthMiddleware = ioc.get<BasicAuthMiddleware>(TYPES.BasicAuthMiddlewa
 
 usersRouter
     .get('/', paginationValidation, paginationMiddleware.use.bind(paginationMiddleware), usersController.getAllUsers.bind(usersController))
-    .post('/', basicAuthMiddleware.use.bind(basicAuthMiddleware), userValidationParams, usersController.createUser.bind(usersController))
+    .post('/', basicAuthMiddleware.use.bind(basicAuthMiddleware), userRegistrationValidationParams, usersController.createUser.bind(usersController))
     .delete('/:id', basicAuthMiddleware.use.bind(basicAuthMiddleware), usersController.deleteUserById.bind(usersController))

@@ -19,7 +19,18 @@ const passwordValidation = body('password')
     .isLength({min: 6, max: 20})
     .withMessage('min-max 6-20 symbols')
 
-export const userValidationParams = [
+const emailValidation = body('email')
+    .isEmail()
+    .withMessage('incorrect email input')
+
+export const userRegistrationValidationParams = [
+    loginValidation,
+    emailValidation,
+    passwordValidation,
+    inputValidatorMiddleware
+]
+
+export const userLoginValidationParams = [
     loginValidation,
     passwordValidation,
     inputValidatorMiddleware

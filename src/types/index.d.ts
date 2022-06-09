@@ -1,4 +1,4 @@
-import {UserType} from "../repositories/users-repository";
+import {UserAccountType} from "../repositories/users-repository";
 
 
 declare global{

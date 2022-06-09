@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {PaginationResultType} from "../application/pagination";
-import {UserWithoutPasswordType} from "../types/user";
+import {UserIdAndLoginType} from "../types/user";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
 
@@ -16,8 +16,8 @@ export class UsersController {
     }
 
     async createUser(req: Request, res: Response) {
-        const {login, password} = req.body
-        const newUser = await this.usersService.createUser(login, password)
+        const {login, email, password} = req.body
+        const newUser = await this.usersService.createUser(login, email, password)
         return res.status(201).send(newUser)
     }
 
@@ -31,9 +31,9 @@ export class UsersController {
 export interface IUsersService {
     getAllUsers(pageNumber: any, pageSize: any): Promise<PaginationResultType>,
 
-    createUser(login: string, password: string): Promise<UserWithoutPasswordType>,
+    createUser(login: string, email: string, password: string): Promise<UserIdAndLoginType>,
 
     deleteUserById(id: string): Promise<boolean>,
 
-    getOneUserById(userId: string): Promise<UserWithoutPasswordType | null>
+    getOneUserById(userId: string): Promise<UserIdAndLoginType | null>
 }

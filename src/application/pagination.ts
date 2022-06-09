@@ -1,10 +1,10 @@
 import {CommentsWithoutPostIdType} from "../types/comments";
 import {BloggerType} from "../types/bloggers";
 import {PostType} from "../types/posts";
-import {UserWithoutPasswordType} from "../types/user";
+import {UserIdAndLoginType} from "../types/user";
 
 
-type items = BloggerType[] | PostType[] | UserWithoutPasswordType[] | CommentsWithoutPostIdType[]
+type items = BloggerType[] | PostType[] | UserIdAndLoginType[] | CommentsWithoutPostIdType[]
 
 export type PaginationResultType = {
     pagesCount: number,

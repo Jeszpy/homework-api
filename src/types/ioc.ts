@@ -1,3 +1,4 @@
+import {IAuthRepository} from "../domain/auth-service";
 
 export const TYPES = {
     IUsersRepository: Symbol.for('IUsersRepository'),
@@ -14,9 +15,12 @@ export const TYPES = {
     CommentsController: Symbol.for('CommentsController'),
     JWTAuthMiddleware: Symbol.for('jwtAuthMiddleware'),
     JWTService: Symbol.for('JWTService'),
+    IAuthRepository: Symbol.for('IAuthRepository'),
+    IAuthService: Symbol.for('IAuthService'),
     AuthController: Symbol.for('AuthController'),
     BasicAuthMiddleware: Symbol.for('BasicAuthMiddleware'),
     PaginationMiddleware: Symbol.for('PaginationMiddleware'),
     BloggersCollection: Symbol.for('BloggersCollection'),
     CheckConnectionLimitsMiddleware: Symbol.for('CheckConnectionLimitsMiddleware'),
+    IConnectionsControlRepository: Symbol.for('IConnectionsControlRepository'),
 }

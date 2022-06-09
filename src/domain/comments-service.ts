@@ -2,7 +2,7 @@ import {v4 as uuidv4} from "uuid";
 import {Filter, ObjectId} from "mongodb";
 import {CommentsType, CommentsWithoutPostIdType} from "../types/comments";
 import {pagination, PaginationResultType} from "../application/pagination";
-import {UserType} from "../types/user";
+import {UserAccountType} from "../types/user";
 import {ICommentsService} from "../presentation/CommentsController";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
@@ -22,7 +22,7 @@ export class CommentsService implements ICommentsService{
         return pagination(pageNumber, pageSize, totalCount, comments)
     }
 
-    async createCommentForPost(user: UserType, postId: string, content: string) {
+    async createCommentForPost(user: UserAccountType, postId: string, content: string) {
         let newComment: CommentsType = {
             _id: new ObjectId(),
             postId,
@@ -35,7 +35,7 @@ export class CommentsService implements ICommentsService{
         return await this.commentsRepository.createComment(newComment)
     }
 
-    async updateCommentById(user: UserType, commentId: string, content: string): Promise<boolean> {
+    async updateCommentById(user: UserAccountType, commentId: string, content: string): Promise<boolean> {
         return await this.commentsRepository.updateCommentById(commentId, content)
     }
 

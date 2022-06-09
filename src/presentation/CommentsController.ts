@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {CommentsWithoutPostIdType} from "../types/comments";
-import {UserType} from "../types/user";
+import {UserAccountType} from "../types/user";
 import {PaginationResultType} from "../application/pagination";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
@@ -53,11 +53,11 @@ export class CommentsController {
 export interface ICommentsService {
     getOneCommentById(commentId: string): Promise<CommentsWithoutPostIdType | null>,
 
-    updateCommentById(user: UserType, commentId: string, content: string): Promise<boolean>,
+    updateCommentById(user: UserAccountType, commentId: string, content: string): Promise<boolean>,
 
     deleteOneCommentById(commentId: string): Promise<boolean>,
 
-    createCommentForPost(user: UserType, postId: string, content: string): Promise<CommentsWithoutPostIdType>,
+    createCommentForPost(user: UserAccountType, postId: string, content: string): Promise<CommentsWithoutPostIdType>,
 
     getCommentsForSpecificPost(postId: string, pageNumber: any, pageSize: any): Promise<PaginationResultType>
 }

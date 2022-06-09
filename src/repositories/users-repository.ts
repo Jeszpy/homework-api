@@ -1,45 +1,76 @@
-import {UserType, UserWithoutPasswordType} from "../types/user";
+import {UserAccountDBType, UserAccountType, UserIdAndLoginType} from "../types/user";
 import * as MongoClient from "mongodb";
 import {IUsersRepository} from "../domain/users-service";
 import {Filter} from "mongodb";
 import {injectable} from "inversify";
+import {IAuthRepository} from "../domain/auth-service";
 
 @injectable()
-export class UsersRepository implements IUsersRepository{
-    constructor(private usersCollection: MongoClient.Collection<UserType>) {
+export class UsersRepository implements IUsersRepository, IAuthRepository {
+    constructor(private usersCollection: MongoClient.Collection<UserAccountDBType>) {
     }
 
-    async getOneUserForJWT(login: string): Promise<UserType | null> {
-        return await this.usersCollection.findOne({login})
+    async getOneUserForJWT(login: string): Promise<UserAccountType | null> {
+        const user = await this.usersCollection.findOne({"accountData.login": login})
+        if (!user) {
+            return null
+        }
+        return user.accountData
     }
 
-    async getOneUserById(id: string): Promise<UserWithoutPasswordType | null> {
-        return await this.usersCollection.findOne({id})
+    async getOneUserById(id: string): Promise<UserIdAndLoginType | null> {
+        const user = await this.usersCollection.findOne({accountData: id})
+        if (!user) {
+            return null
+        }
+        return {
+            id: user.accountData.id,
+            login: user.accountData.login
+        }
     }
 
-    async getAllUsers(pageNumber: number, pageSize: number): Promise<UserWithoutPasswordType[]> {
+    async getAllUsers(pageNumber: number, pageSize: number): Promise<UserIdAndLoginType[]> {
         const allUsers = await this.usersCollection.find({}, {
-            projection: {_id: false, password: false},
+            projection: {_id: false, accountData: {id: true, login: true}},
             skip: ((pageNumber - 1) * pageSize),
-            limit: (pageSize)
+            limit: (pageSize),
         }).toArray()
-        return allUsers
+        return allUsers.map(u => ({id: u.accountData.id, login: u.accountData.login}))
     }
 
-    async createUser(newUser: UserType): Promise<UserWithoutPasswordType> {
-            await this.usersCollection.insertOne({...newUser})
-            return {
-                id: newUser.id,
-                login: newUser.login
-            }
+    async createUser(newUser: UserAccountDBType): Promise<UserIdAndLoginType> {
+        await this.usersCollection.insertOne({...newUser})
+        return {
+            id: newUser.accountData.id,
+            login: newUser.accountData.login
+        }
     }
 
     async deleteUserById(id: string): Promise<boolean> {
-        const isUserDeleted = await this.usersCollection.deleteOne({id})
+        const isUserDeleted = await this.usersCollection.deleteOne({accountData: id})
         return isUserDeleted.deletedCount === 1
     }
 
-    async getTotalCount(filter: Filter<UserType>): Promise<number> {
+    async getTotalCount(filter: Filter<UserAccountDBType>): Promise<number> {
         return this.usersCollection.countDocuments(filter)
+    }
+
+
+    async getUserByConfirmationCode(code: string): Promise<UserAccountDBType | null> {
+        return await this.usersCollection.findOne({"emailConfirmation.confirmationCode": code})
+    }
+
+    async confirmEmailRegistration(user: UserAccountDBType): Promise<boolean> {
+        const result = await this.usersCollection.updateOne({"emailConfirmation.confirmationCode": user.emailConfirmation.confirmationCode}, {
+            $set: { "emailConfirmation.isConfirmed": true
+                // emailConfirmation: {
+                //     isConfirmed: true,
+                //     confirmationCode: '',
+                //     sentEmails: [],
+                //     expirationDate: new Date()
+                // }
+            }
+        })
+        return result.modifiedCount === 1
     }
 }

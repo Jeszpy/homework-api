@@ -13,26 +13,33 @@ import {UsersRepository} from "./repositories/users-repository";
 import {IUsersRepository, UsersService} from "./domain/users-service";
 import {IUsersService, UsersController} from "./presentation/UsersController";
 import {JWTService} from "./application/jwt-service";
-import {AuthController} from "./presentation/AuthController";
+import {AuthController, IAuthService} from "./presentation/AuthController";
 import {JWTAuthMiddleware} from "./middlewaries/auth/jwt-auth-middleware";
 import {BasicAuthMiddleware} from "./middlewaries/auth/basic-auth-middleware";
 import {PaginationMiddleware} from "./middlewaries/pagination-middleware";
 import {TYPES} from "./types/ioc";
 import {
+    blockedConnectionCollection,
     bloggersCollection,
-    commentsCollection,
-    deletedBloggersCollection, deletedPostsCollection, postsCollection,
+    commentsCollection, connectionLimitsCollection,
+    deletedPostsCollection,
+    postsCollection,
     usersCollection
 } from "./repositories/mongo-db";
-import {CheckConnectionLimitsMiddleware} from "./middlewaries/auth/check-connection-limits-middleware";
-
+import {
+    CheckConnectionLimitsMiddleware,
+    IConnectionsControlRepository
+} from "./middlewaries/auth/check-connection-limits-middleware";
+import {AuthService, IAuthRepository} from "./domain/auth-service";
+import {ConnectionsControlRepository} from "./repositories/connections-control-repository";
 
 
 // Repos
 const postsRepository = new PostsRepository(postsCollection, deletedPostsCollection)
 const commentsRepository = new CommentsRepository(commentsCollection)
- const bloggersRepository = new BloggersRepository(bloggersCollection)
+const bloggersRepository = new BloggersRepository(bloggersCollection)
 const usersRepository = new UsersRepository(usersCollection)
+const connectionsControlRepository = new ConnectionsControlRepository(connectionLimitsCollection, blockedConnectionCollection)
 
 // Services
 // const commentsService = new CommentsService(commentsRepository)
@@ -57,16 +64,15 @@ const usersRepository = new UsersRepository(usersCollection)
 
 // IoCContainer
 // export const ioc = {
-    // bloggersController,
-    // postsController,
-    // commentsController,
-    // usersController,
-    // authController,
-    // jwtAuthMiddleware,
-    // basicAuthMiddleware,
-    // paginationMiddleware
+// bloggersController,
+// postsController,
+// commentsController,
+// usersController,
+// authController,
+// jwtAuthMiddleware,
+// basicAuthMiddleware,
+// paginationMiddleware
 // }
-
 
 
 const invContainer = new Container()
@@ -84,11 +90,13 @@ invContainer.bind<ICommentsService>(TYPES.ICommentsService).to(CommentsService)
 invContainer.bind<CommentsController>(TYPES.CommentsController).to(CommentsController)
 invContainer.bind<JWTAuthMiddleware>(TYPES.JWTAuthMiddleware).to(JWTAuthMiddleware)
 invContainer.bind<JWTService>(TYPES.JWTService).to(JWTService)
+invContainer.bind<IAuthRepository>(TYPES.IAuthRepository).toConstantValue(usersRepository)
+invContainer.bind<IAuthService>(TYPES.IAuthService).to(AuthService)
 invContainer.bind<AuthController>(TYPES.AuthController).to(AuthController)
 invContainer.bind<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware).to(BasicAuthMiddleware)
 invContainer.bind<PaginationMiddleware>(TYPES.PaginationMiddleware).to(PaginationMiddleware)
 invContainer.bind<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMiddleware).to(CheckConnectionLimitsMiddleware)
-// in
 
+invContainer.bind<IConnectionsControlRepository>(TYPES.IConnectionsControlRepository).toConstantValue(connectionsControlRepository)
 
 export {invContainer as ioc}

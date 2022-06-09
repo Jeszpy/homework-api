@@ -15,8 +15,7 @@ export const inputValidatorMiddleware = (req: Request, res: Response, next: Next
         })
         return res.status(400).json(
             {
-                "errorsMessages": errorsOccurred,
-                "resultCode": 1
+                "errorsMessages": errorsOccurred
             }
         )
     }
