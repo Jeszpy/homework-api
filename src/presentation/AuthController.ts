@@ -26,7 +26,7 @@ export class AuthController {
     async confirmEmail(req: Request, res: Response) {
         const {code} = req.body
         const isConfirm = await this.authService.confirmEmail(code)
-        return isConfirm ? res.sendStatus(204) : res.sendStatus(404)
+        return isConfirm ? res.sendStatus(204) : res.sendStatus(400)
     }
 }
 

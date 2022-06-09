@@ -10,7 +10,7 @@ export class EmailsRepository implements IEmailsRepository {
 
     async insertEmailToQueue(email: string, topic: string, userLogin: string, confirmationCode: string): Promise<boolean> {
         const createdAt = new Date()
-        await this.emailsCollection.insertOne({email, topic, userLogin, confirmationCode, createdAt})
-        return true
+        const isInserted = await this.emailsCollection.insertOne({email, topic, userLogin, confirmationCode, createdAt})
+        return isInserted.acknowledged
     }
 }
