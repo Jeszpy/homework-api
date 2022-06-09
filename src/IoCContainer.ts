@@ -33,7 +33,8 @@ import {
 import {AuthService, IAuthRepository} from "./domain/auth-service";
 import {ConnectionsControlRepository} from "./repositories/connections-control-repository";
 import {EmailsRepository} from "./repositories/emails-repository";
-import {NotificationService} from "./application/notification-service";
+import {EmailNotificationService} from "./application/email-notification-service";
+// import {EmailNotificationService} from "./application/email-notification-service";
 
 
 // Repos
@@ -102,6 +103,6 @@ invContainer.bind<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMi
 
 invContainer.bind<IConnectionsControlRepository>(TYPES.IConnectionsControlRepository).toConstantValue(connectionsControlRepository)
 invContainer.bind<IEmailsRepository>(TYPES.IEmailsRepository).toConstantValue(emailsRepository)
-invContainer.bind<NotificationService>(TYPES.NotificationService).to(NotificationService)
+invContainer.bind<EmailNotificationService>(TYPES.EmailNotificationService).to(EmailNotificationService)
 
 export {invContainer as ioc}

@@ -6,6 +6,7 @@ import {authRouter} from "./routes/auth-router";
 import {usersRouter} from "./routes/users-router";
 import {settings} from "./settings";
 import {commentsRouter} from "./routes/comments-router";
+import {scheduler} from "./application/scheduler";
 
 const cors = require('cors')
 
@@ -25,9 +26,11 @@ app.use('/ht_04/api/comments', commentsRouter)
 
 const startApp = (async () => {
     await runDb()
+    await scheduler()
     app.listen(PORT, () => {
         console.log(`Express app listening on port ${PORT}`)
     })
+
 })
 
 startApp()

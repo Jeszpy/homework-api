@@ -62,14 +62,7 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
 
     async confirmEmailRegistration(user: UserAccountDBType): Promise<boolean> {
         const result = await this.usersCollection.updateOne({"emailConfirmation.confirmationCode": user.emailConfirmation.confirmationCode}, {
-            $set: { "emailConfirmation.isConfirmed": true
-                // emailConfirmation: {
-                //     isConfirmed: true,
-                //     confirmationCode: '',
-                //     sentEmails: [],
-                //     expirationDate: new Date()
-                // }
-            }
+            $set: {"emailConfirmation.isConfirmed": true}
         })
         return result.modifiedCount === 1
     }
