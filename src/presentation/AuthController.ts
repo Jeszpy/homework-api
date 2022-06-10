@@ -24,6 +24,11 @@ export class AuthController {
 
     async registrationEmailResending(req: Request, res: Response){
         const {email} = req.body
+        const emailInDB = await this.authService.findOneUserByEmail(email)
+        if (emailInDB) {
+            return res.status(400).send(returnErrorMessage('email'))
+        }
+        const isResend = await this.authService.registrationEmailResending(email)
 
     }
 

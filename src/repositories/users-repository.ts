@@ -76,4 +76,14 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
         const user = await this.usersCollection.findOne({"accountData.login": login})
         return !!user
     }
+
+    async getOneUserByEmail(email:string): Promise<UserAccountDBType | null>{
+        return await this.usersCollection.findOne({"accountData.email": email})
+    }
+
+    async updateOneUserByEmail(email:string, updateData: UserAccountDBType): Promise<boolean>{
+        const count = await this.usersCollection.updateOne({"accountData.email": email}, {$set:{...updateData}})
+        console.log(count)
+        return true
+    }
 }

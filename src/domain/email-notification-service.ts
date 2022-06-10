@@ -58,7 +58,6 @@ export class EmailNotificationService {
 
 
     private async changeStatus(emailId: string, newStatus: string): Promise<boolean> {
-
         return await this.emailsRepository.changeStatus(emailId, newStatus)
     }
 }
