@@ -14,6 +14,7 @@ const cors = require('cors')
 const PORT = settings.PORT
 
 const app = express()
+app.set('trust proxy', true);
 
 app.use(cors())
 app.use(express.json())

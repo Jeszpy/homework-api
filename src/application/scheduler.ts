@@ -11,6 +11,7 @@ const emailService = EmailSender.send.bind(EmailSender)
 const sendEmails = () => {
     setTimeout( async () => {
         await emailService()
+        sendEmails()
     }, 3000)
 }
 
