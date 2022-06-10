@@ -16,6 +16,7 @@ export class CheckConnectionLimitsMiddleware {
     async use(req: Request, res: Response, next: NextFunction) {
         const connectionDate: Date = new Date()
         const ip = req.ip
+        console.log(ip)
         const action = (req.baseUrl).split('/').at(-1)!
         const isBlocked = await this.connectionsControlRepository.checkBlockedStatus(ip, action, connectionDate, this.blockedInterval)
         if (isBlocked) {
