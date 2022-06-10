@@ -26,6 +26,16 @@ const registrationCodeConfirmErrorMessage = () => {
     }
 }
 
+const registrationEmailResendingErrorMessage = () => {
+    return {
+        "errorsMessages": [
+            {
+                "message": 'user with this email was not found',
+                "field": 'email'
+            }
+        ]
+    }
+}
 
 @injectable()
 export class AuthController {
@@ -36,8 +46,8 @@ export class AuthController {
     async registrationEmailResending(req: Request, res: Response){
         const {email} = req.body
         const emailInDB = await this.authService.findOneUserByEmail(email)
-        if (emailInDB) {
-            return res.status(400).send(returnErrorMessage('email'))
+        if (!emailInDB) {
+            return res.status(400).send(registrationEmailResendingErrorMessage)
         }
         const isResend = await this.authService.registrationEmailResending(email)
         return isResend ? res.sendStatus(204) : res.status(400).send(registrationCodeConfirmErrorMessage)
