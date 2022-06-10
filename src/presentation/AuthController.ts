@@ -15,6 +15,17 @@ const returnErrorMessage = (field: string) => {
     }
 }
 
+const registrationCodeConfirmErrorMessage = () => {
+    return {
+        "errorsMessages": [
+            {
+                "message": 'this email has already been confirmed',
+                "field": 'email'
+            }
+        ]
+    }
+}
+
 
 @injectable()
 export class AuthController {
@@ -29,7 +40,7 @@ export class AuthController {
             return res.status(400).send(returnErrorMessage('email'))
         }
         const isResend = await this.authService.registrationEmailResending(email)
-
+        return isResend ? res.sendStatus(204) : res.status(400).send(registrationCodeConfirmErrorMessage)
     }
 
 
