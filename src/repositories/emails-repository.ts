@@ -6,7 +6,7 @@ import {TYPES} from "../types/ioc";
 
 @injectable()
 export class EmailsRepository implements IEmailsRepository {
-    constructor(@inject(TYPES.IEmailsRepository) private emailsCollection: MongoClient.Collection<EmailType>) {
+    constructor(private emailsCollection: MongoClient.Collection<EmailType>) {
     }
 
     async insertEmailToQueue(emailInfo: EmailType): Promise<boolean> {

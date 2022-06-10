@@ -1,12 +1,11 @@
-import {BloggerType, BloggerWithDateType} from "../types/bloggers";
+import {BloggerType} from "../types/bloggers";
 import * as MongoClient from 'mongodb'
 import {Filter} from "mongodb";
 import {IBloggersRepository} from "../domain/bloggers-service";
-import {inject, injectable} from "inversify";
-import {TYPES} from "../types/ioc";
+import {injectable} from "inversify";
 
 @injectable()
-export class BloggersRepository implements IBloggersRepository{
+export class BloggersRepository implements IBloggersRepository {
     // constructor(private bloggersCollection: MongoClient.Collection<BloggerType>, private deletedBloggersCollection: MongoClient.Collection<BloggerWithDateType>) {
     // }
     constructor(private bloggersCollection: MongoClient.Collection<BloggerType>) {

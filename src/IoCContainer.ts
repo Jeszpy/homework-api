@@ -34,7 +34,9 @@ import {AuthService, IAuthRepository} from "./domain/auth-service";
 import {ConnectionsControlRepository} from "./repositories/connections-control-repository";
 import {EmailsRepository} from "./repositories/emails-repository";
 import {EmailNotificationService} from "./application/email-notification-service";
-// import {EmailNotificationService} from "./application/email-notification-service";
+import {TestingRepository} from "./repositories/testing-repository";
+import {ITestingRepository, TestingService} from "./domain/testing-service";
+import {ITestingService, TestingController} from "./presentation/TestingController";
 
 
 // Repos
@@ -44,6 +46,8 @@ const bloggersRepository = new BloggersRepository(bloggersCollection)
 const usersRepository = new UsersRepository(usersCollection)
 const connectionsControlRepository = new ConnectionsControlRepository(connectionLimitsCollection, blockedConnectionCollection)
 const emailsRepository = new EmailsRepository(emailsCollection)
+const testingRepository = new TestingRepository(connectionLimitsCollection, blockedConnectionCollection,
+    bloggersCollection, commentsCollection, emailsCollection, postsCollection, usersCollection)
 
 // Services
 // const commentsService = new CommentsService(commentsRepository)
@@ -104,5 +108,10 @@ invContainer.bind<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMi
 invContainer.bind<IConnectionsControlRepository>(TYPES.IConnectionsControlRepository).toConstantValue(connectionsControlRepository)
 invContainer.bind<IEmailsRepository>(TYPES.IEmailsRepository).toConstantValue(emailsRepository)
 invContainer.bind<EmailNotificationService>(TYPES.EmailNotificationService).to(EmailNotificationService)
+
+invContainer.bind<ITestingRepository>(TYPES.ITestingRepository).toConstantValue(testingRepository)
+invContainer.bind<ITestingService>(TYPES.ITestingService).to(TestingService)
+invContainer.bind<TestingController>(TYPES.TestingController).to(TestingController)
+
 
 export {invContainer as ioc}

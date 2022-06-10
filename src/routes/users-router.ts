@@ -11,12 +11,19 @@ import {TYPES} from "../types/ioc";
 
 export const usersRouter = Router({})
 
+const basicAuthMiddlewareIoC = ioc.get<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware)
+const basicAuthMiddleware = basicAuthMiddlewareIoC.use.bind(basicAuthMiddlewareIoC)
+
+const paginationMiddlewareIoC = ioc.get<PaginationMiddleware>(TYPES.PaginationMiddleware)
+const paginationMiddleware = paginationMiddlewareIoC.use.bind(paginationMiddlewareIoC)
+
 const usersController = ioc.get<UsersController>(TYPES.UsersController)
-const paginationMiddleware = ioc.get<PaginationMiddleware>(TYPES.PaginationMiddleware)
-const basicAuthMiddleware = ioc.get<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware)
+const getAllUsers = usersController.getAllUsers.bind(usersController)
+const createUser = usersController.createUser.bind(usersController)
+const deleteUserById = usersController.deleteUserById.bind(usersController)
 
 
 usersRouter
-    .get('/', paginationValidation, paginationMiddleware.use.bind(paginationMiddleware), usersController.getAllUsers.bind(usersController))
-    .post('/', basicAuthMiddleware.use.bind(basicAuthMiddleware), userRegistrationValidationParams, usersController.createUser.bind(usersController))
-    .delete('/:id', basicAuthMiddleware.use.bind(basicAuthMiddleware), usersController.deleteUserById.bind(usersController))
+    .get('/', paginationValidation, paginationMiddleware, getAllUsers)
+    .post('/', basicAuthMiddleware, userRegistrationValidationParams, createUser)
+    .delete('/:id', basicAuthMiddleware, deleteUserById)

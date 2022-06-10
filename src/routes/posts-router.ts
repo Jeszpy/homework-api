@@ -11,17 +11,31 @@ import {TYPES} from "../types/ioc";
 
 export const postsRouter = Router({})
 
-const postsController = ioc.get<PostsController>(TYPES.PostsController)
-const paginationMiddleware = ioc.get<PaginationMiddleware>(TYPES.PaginationMiddleware)
-const basicAuthMiddleware = ioc.get<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware)
-const jwtAuthMiddleware = ioc.get<JWTAuthMiddleware>(TYPES.JWTAuthMiddleware)
+const basicAuthMiddlewareIoC = ioc.get<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware)
+const basicAuthMiddleware = basicAuthMiddlewareIoC.use.bind(basicAuthMiddlewareIoC)
 
+const jwtAuthMiddlewareIoC = ioc.get<JWTAuthMiddleware>(TYPES.JWTAuthMiddleware)
+const jwtAuthMiddleware = jwtAuthMiddlewareIoC.use.bind(jwtAuthMiddlewareIoC)
+
+
+const paginationMiddlewareIoC = ioc.get<PaginationMiddleware>(TYPES.PaginationMiddleware)
+const paginationMiddleware = paginationMiddlewareIoC.use.bind(paginationMiddlewareIoC)
+
+
+const postsController = ioc.get<PostsController>(TYPES.PostsController)
+const getAllPosts = postsController.getAllPosts.bind(postsController)
+const createNewPost = postsController.createNewPost.bind(postsController)
+const getOnePostById = postsController.getOnePostById.bind(postsController)
+const updateOnePostById = postsController.updateOnePostById.bind(postsController)
+const deleteOnePostById = postsController.deleteOnePostById.bind(postsController)
+const createCommentForPost = postsController.createCommentForPost.bind(postsController)
+const getCommentsByPost = postsController.getCommentsByPost.bind(postsController)
 
 postsRouter
-    .get('/', paginationValidation, paginationMiddleware.use.bind(paginationMiddleware), postsController.getAllPosts.bind(postsController))
-    .post('/', basicAuthMiddleware.use.bind(basicAuthMiddleware), postValidation, postsController.createNewPost.bind(postsController))
-    .get('/:id', postsController.getOnePostById.bind(postsController))
-    .put('/:id', basicAuthMiddleware.use.bind(basicAuthMiddleware), postValidation, postsController.updateOnePostById.bind(postsController))
-    .delete('/:id', basicAuthMiddleware.use.bind(basicAuthMiddleware), postsController.deleteOnePostById.bind(postsController))
-    .post('/:postId/comments', jwtAuthMiddleware.use.bind(jwtAuthMiddleware), commentsValidation, postsController.createCommentForPost.bind(postsController))
-    .get('/:postId/comments', paginationValidation, paginationMiddleware.use.bind(paginationMiddleware), postsController.getCommentsByPost.bind(postsController))
+    .get('/', paginationValidation, paginationMiddleware, getAllPosts)
+    .post('/', basicAuthMiddleware, postValidation, createNewPost)
+    .get('/:id', getOnePostById)
+    .put('/:id', basicAuthMiddleware, postValidation, updateOnePostById)
+    .delete('/:id', basicAuthMiddleware, deleteOnePostById)
+    .post('/:postId/comments', jwtAuthMiddleware, commentsValidation, createCommentForPost)
+    .get('/:postId/comments', paginationValidation, paginationMiddleware, getCommentsByPost)

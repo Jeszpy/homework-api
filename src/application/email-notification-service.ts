@@ -31,8 +31,7 @@ export class EmailNotificationService {
                 from: settings.EMAIL_FROM,
                 to: email.email,
                 html: htmlTemplate,
-                subject: email.subject,
-                text: ''
+                subject: email.subject
             }
         )
         await this.changeStatus(email.id, 'sent')

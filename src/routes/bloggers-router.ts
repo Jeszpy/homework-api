@@ -14,15 +14,27 @@ import {TYPES} from "../types/ioc";
 
 export const bloggersRouter = Router({})
 
-const bloggersController = ioc.get<BloggersController>(TYPES.BloggersController)
-const paginationMiddleware = ioc.get<PaginationMiddleware>(TYPES.PaginationMiddleware)
-const basicAuthMiddleware = ioc.get<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware)
+const basicAuthMiddlewareIoC = ioc.get<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware)
+const basicAuthMiddleware = basicAuthMiddlewareIoC.use.bind(basicAuthMiddlewareIoC)
+
+const paginationMiddlewareIoC = ioc.get<PaginationMiddleware>(TYPES.PaginationMiddleware)
+const paginationMiddleware = paginationMiddlewareIoC.use.bind(paginationMiddlewareIoC)
+
+const bloggersControllerIoC = ioc.get<BloggersController>(TYPES.BloggersController)
+const getAllBloggers = bloggersControllerIoC.getAllBloggers.bind(bloggersControllerIoC)
+const createBlogger = bloggersControllerIoC.createBlogger.bind(bloggersControllerIoC)
+const getBloggerById = bloggersControllerIoC.getBloggerById.bind(bloggersControllerIoC)
+const updateBloggerById = bloggersControllerIoC.updateBloggerById.bind(bloggersControllerIoC)
+const deleteBloggerById = bloggersControllerIoC.deleteBloggerById.bind(bloggersControllerIoC)
+const getPostsForSpecificBlogger = bloggersControllerIoC.getPostsForSpecificBlogger.bind(bloggersControllerIoC)
+const createPostForSpecifiedBlogger = bloggersControllerIoC.createPostForSpecifiedBlogger.bind(bloggersControllerIoC)
+
 
 bloggersRouter
-    .get('/', paginationWithSearchNameTermValidation, paginationMiddleware.use.bind(paginationMiddleware), bloggersController.getAllBloggers.bind(bloggersController))
-    .post('/', basicAuthMiddleware.use.bind(basicAuthMiddleware), bloggerValidation, bloggersController.getAllBloggers.bind(bloggersController))
-    .get('/:id', bloggersController.getBloggerById.bind(bloggersController))
-    .put('/:id', basicAuthMiddleware.use.bind(basicAuthMiddleware), bloggerValidation, bloggersController.updateBloggerById.bind(bloggersController))
-    .delete('/:id', basicAuthMiddleware.use.bind(basicAuthMiddleware), bloggersController.deleteBloggerById.bind(bloggersController))
-    .get('/:bloggerId/posts', paginationValidation, paginationMiddleware.use.bind(paginationMiddleware), bloggersController.getPostsForSpecificBlogger.bind(bloggersController))
-    .post('/:bloggerId/posts', basicAuthMiddleware.use.bind(basicAuthMiddleware), postWithoutBloggerIdValidation, bloggersController.createPostForSpecifiedBlogger.bind(bloggersController))
+    .get('/', paginationWithSearchNameTermValidation, paginationMiddleware, getAllBloggers)
+    .post('/', basicAuthMiddleware, bloggerValidation, createBlogger)
+    .get('/:id', getBloggerById)
+    .put('/:id', basicAuthMiddleware, bloggerValidation, updateBloggerById)
+    .delete('/:id', basicAuthMiddleware, deleteBloggerById)
+    .get('/:bloggerId/posts', paginationValidation, paginationMiddleware, getPostsForSpecificBlogger)
+    .post('/:bloggerId/posts', basicAuthMiddleware, postWithoutBloggerIdValidation, createPostForSpecifiedBlogger)

@@ -12,10 +12,17 @@ import {
 
 export const authRouter = Router({})
 
-const authController = ioc.get<AuthController>(TYPES.AuthController)
-const checkConnectionLimitsMiddleware = ioc.get<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMiddleware)
+const checkConnectionLimitsMiddlewareIoC = ioc.get<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMiddleware)
+const checkConnectionLimitsMiddleware = checkConnectionLimitsMiddlewareIoC.use.bind(checkConnectionLimitsMiddlewareIoC)
 
-// authRouter.post('/login', checkConnectionLimitsMiddleware.use.bind(checkConnectionLimitsMiddleware) ,authValidationParams, authController.login.bind(authController))
-authRouter.post('/registration', checkConnectionLimitsMiddleware.use.bind(checkConnectionLimitsMiddleware) ,authRegistrationValidationParams, authController.registration.bind(authController))
-authRouter.post('/registration-confirmation', checkConnectionLimitsMiddleware.use.bind(checkConnectionLimitsMiddleware) ,authConfirmEmailValidationParams, authController.confirmEmail.bind(authController))
-authRouter.post('/login', checkConnectionLimitsMiddleware.use.bind(checkConnectionLimitsMiddleware) , authLoginValidationParams, authController.login.bind(authController))
+const authControllerIoC = ioc.get<AuthController>(TYPES.AuthController)
+// const registration = authControllerIoC.registration.bind(authControllerIoC)
+const registration = authControllerIoC.registration.bind(authControllerIoC)
+const confirmEmail = authControllerIoC.confirmEmail.bind(authControllerIoC)
+const login = authControllerIoC.login.bind(authControllerIoC)
+
+
+// authRouter.post('/login', checkConnectionLimitsMiddleware ,authValidationParams, authControllerIoC.login.bind(authControllerIoC))
+authRouter.post('/registration', checkConnectionLimitsMiddleware, authRegistrationValidationParams, registration)
+authRouter.post('/registration-confirmation', checkConnectionLimitsMiddleware, authConfirmEmailValidationParams, confirmEmail)
+authRouter.post('/login', checkConnectionLimitsMiddleware, authLoginValidationParams, login)

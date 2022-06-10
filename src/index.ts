@@ -7,6 +7,7 @@ import {usersRouter} from "./routes/users-router";
 import {settings} from "./settings";
 import {commentsRouter} from "./routes/comments-router";
 import {scheduler} from "./application/scheduler";
+import {testingRouter} from "./routes/testing-router";
 
 const cors = require('cors')
 
@@ -22,13 +23,14 @@ app.use('/ht_04/api/bloggers', bloggersRouter)
 app.use('/ht_04/api/posts', postsRouter)
 app.use('/ht_04/api/users', usersRouter)
 app.use('/ht_04/api/comments', commentsRouter)
+app.use('/ht_04/api/testing', testingRouter)
 
 
 const startApp = (async () => {
     await runDb()
-    await scheduler()
-    app.listen(PORT, () => {
+    app.listen(PORT, async () => {
         console.log(`Express app listening on port ${PORT}`)
+        await scheduler()
     })
 
 })
