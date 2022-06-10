@@ -25,8 +25,12 @@ export class UsersService implements IUsersService {
     }
 
     async createUser(login: string, email: string, password: string): Promise<UserIdAndLoginType | null> {
-        const userInDB = await this.usersRepository.findOneUserByLoginOrEmail(login, email)
-        if (userInDB){
+        const emailInDB = await this.usersRepository.findOneUserByEmail(email)
+        if (emailInDB) {
+            return null
+        }
+        const loginInDB = await this.usersRepository.findOneUserByLogin(login)
+        if (loginInDB) {
             return null
         }
         const hash = await argon2.hash(password);
@@ -45,7 +49,6 @@ export class UsersService implements IUsersService {
                 expirationDate: addMinutes(new Date(), 3),
                 isConfirmed: false
             }
-
         }
         const user = await this.usersRepository.createUser(newUser)
         const emailInfo: EmailType = {
@@ -65,6 +68,8 @@ export class UsersService implements IUsersService {
     async deleteUserById(id: string): Promise<boolean> {
         return await this.usersRepository.deleteUserById(id)
     }
+
+
 }
 
 export interface IUsersRepository {
@@ -80,7 +85,9 @@ export interface IUsersRepository {
 
     getOneUserForJWT(login: string): Promise<UserAccountType | null>
 
-    findOneUserByLoginOrEmail(login: string, email: string): Promise<boolean>
+    findOneUserByLogin(login: string): Promise<boolean>
+
+    findOneUserByEmail(email: string): Promise<boolean>
 }
 
 export interface IEmailsRepository {

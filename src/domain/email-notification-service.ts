@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
-import {IEmailsRepository} from "../domain/users-service";
+import {IEmailsRepository} from "./users-service";
 import {EmailType} from "../types/emails";
 import fs from 'fs/promises'
 import {settings} from "../settings";

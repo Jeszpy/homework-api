@@ -30,21 +30,28 @@ const codeValidation = body('code')
     .notEmpty()
     .withMessage('field must not be empty')
 
+
 export const authConfirmEmailValidationParams = [
-  codeValidation,
-  inputValidatorMiddleware
+    codeValidation,
+    inputValidatorMiddleware
 ]
 
 
 export const authRegistrationValidationParams = [
-  loginValidation,
-  emailValidation,
-  passwordValidation,
-  inputValidatorMiddleware
+    loginValidation,
+    emailValidation,
+    passwordValidation,
+    inputValidatorMiddleware
 ]
 
 export const authLoginValidationParams = [
-  loginValidation,
-  passwordValidation,
-  inputValidatorMiddleware
+    loginValidation,
+    passwordValidation,
+    inputValidatorMiddleware
 ]
+
+export const authRegistrationEmailResendingValidationParams = [
+    emailValidation,
+    inputValidatorMiddleware
+]
+

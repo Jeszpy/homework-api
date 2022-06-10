@@ -67,8 +67,13 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
         return result.modifiedCount === 1
     }
 
-    async findOneUserByLoginOrEmail(login: string, email: string): Promise<boolean> {
-        const user = await this.usersCollection.findOne({$or: [{"accountData.login": login}, {"accountData.email": email}]})
+    async findOneUserByEmail(email: string): Promise<boolean> {
+        const user = await this.usersCollection.findOne({"accountData.email": email})
+        return !!user
+    }
+
+    async findOneUserByLogin(login: string,): Promise<boolean> {
+        const user = await this.usersCollection.findOne({"accountData.login": login})
         return !!user
     }
 }

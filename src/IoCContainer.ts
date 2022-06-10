@@ -33,7 +33,7 @@ import {
 import {AuthService, IAuthRepository} from "./domain/auth-service";
 import {ConnectionsControlRepository} from "./repositories/connections-control-repository";
 import {EmailsRepository} from "./repositories/emails-repository";
-import {EmailNotificationService} from "./application/email-notification-service";
+import {EmailNotificationService} from "./domain/email-notification-service";
 import {TestingRepository} from "./repositories/testing-repository";
 import {ITestingRepository, TestingService} from "./domain/testing-service";
 import {ITestingService, TestingController} from "./presentation/TestingController";

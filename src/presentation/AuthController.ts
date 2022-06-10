@@ -4,10 +4,31 @@ import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
 import {IUsersService} from "./UsersController";
 
+const returnErrorMessage = (field: string) => {
+    return {
+        "errorsMessages": [
+            {
+                "message": `this ${field} has already been created`,
+                "field": field
+            }
+        ]
+    }
+}
+
+
 @injectable()
 export class AuthController {
     constructor(@inject(TYPES.JWTService) private jwtService: JWTService, @inject(TYPES.IUsersService) private usersService: IUsersService, @inject(TYPES.IAuthService) private authService: IAuthService) {
     }
+
+
+    async registrationEmailResending(req: Request, res: Response){
+        const {email} = req.body
+
+    }
+
+
+
 
     async login(req: Request, res: Response) {
         const {login, password} = req.body
@@ -17,8 +38,15 @@ export class AuthController {
 
     async registration(req: Request, res: Response) {
         const {login, email, password} = req.body
+        const emailInDB = await this.authService.findOneUserByEmail(email)
+        if (emailInDB) {
+            return res.status(400).send(returnErrorMessage('email'))
+        }
+        const loginInDB = await this.authService.findOneUserByLogin(login)
+        if (loginInDB) {
+            return res.status(400).send(returnErrorMessage('login'))
+        }
         const user = await this.usersService.createUser(login, email, password)
-        // 400 ?
         return user ? res.sendStatus(204) : res.sendStatus(400)
 
     }
@@ -32,4 +60,10 @@ export class AuthController {
 
 export interface IAuthService {
     confirmEmail(code: string): Promise<boolean | null>
+
+    findOneUserByLogin(login: string): Promise<boolean>
+
+    findOneUserByEmail(email: string): Promise<boolean>
+
+    registrationEmailResending(email: string): Promise<boolean>
 }

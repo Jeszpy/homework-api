@@ -2,6 +2,7 @@ import {inject, injectable} from "inversify";
 import {IAuthService} from "../presentation/AuthController";
 import {TYPES} from "../types/ioc";
 import {UserAccountDBType} from "../types/user";
+import {IUsersRepository} from "./users-service";
 
 
 @injectable()
@@ -21,10 +22,30 @@ export class AuthService implements IAuthService {
         }
         return await this.usersRepository.confirmEmailRegistration(user)
     }
+
+    async findOneUserByEmail(email: string): Promise<boolean> {
+        return await this.usersRepository.findOneUserByEmail(email)
+    }
+
+    async findOneUserByLogin(login: string): Promise<boolean> {
+        return await this.usersRepository.findOneUserByLogin(login)
+    }
+
+    // TODO: !
+    async registrationEmailResending(email: string): Promise<boolean> {
+        return true
+    }
+
+
 }
+
 
 export interface IAuthRepository {
     getUserByConfirmationCode(code: string): Promise<UserAccountDBType | null>
 
     confirmEmailRegistration(user: UserAccountDBType): Promise<boolean>
+
+    findOneUserByEmail(email: string): Promise<boolean>
+
+    findOneUserByLogin(login: string): Promise<boolean>
 }
