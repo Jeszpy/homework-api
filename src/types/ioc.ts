@@ -1,4 +1,6 @@
 import {IAuthRepository} from "../domain/auth-service";
+import {HtmlTemplateService} from "../application/html-template-service";
+import {SmtpAdapter} from "../application/smtp-adapter";
 
 export const TYPES = {
     IUsersRepository: Symbol.for('IUsersRepository'),
@@ -37,4 +39,7 @@ export const TYPES = {
     ITestingRepository: Symbol.for('ITestingRepository'),
     ITestingService: Symbol.for('ITestingService'),
     TestingController: Symbol.for('TestingController'),
+
+    HtmlTemplateService: Symbol.for('HtmlTemplateService'),
+    SmtpAdapter: Symbol.for('SmtpAdapter'),
 }

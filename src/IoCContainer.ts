@@ -37,6 +37,8 @@ import {EmailNotificationService} from "./domain/email-notification-service";
 import {TestingRepository} from "./repositories/testing-repository";
 import {ITestingRepository, TestingService} from "./domain/testing-service";
 import {ITestingService, TestingController} from "./presentation/TestingController";
+import {HtmlTemplateService} from "./application/html-template-service";
+import {SmtpAdapter} from "./application/smtp-adapter";
 
 
 // Repos
@@ -118,6 +120,9 @@ invContainer.bind<EmailNotificationService>(TYPES.EmailNotificationService).to(E
 invContainer.bind<ITestingRepository>(TYPES.ITestingRepository).toConstantValue(testingRepository)
 invContainer.bind<ITestingService>(TYPES.ITestingService).to(TestingService)
 invContainer.bind<TestingController>(TYPES.TestingController).to(TestingController)
+
+invContainer.bind<HtmlTemplateService>(TYPES.HtmlTemplateService).to(HtmlTemplateService)
+invContainer.bind<SmtpAdapter>(TYPES.SmtpAdapter).to(SmtpAdapter)
 
 
 export {invContainer as ioc}

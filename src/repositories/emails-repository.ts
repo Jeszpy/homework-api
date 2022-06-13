@@ -14,14 +14,14 @@ export class EmailsRepository implements IEmailsRepository {
         return isInserted.acknowledged
     }
 
-    async getEmailFromQueue(): Promise<EmailType[] | null> {
+    async getEmailFromQueue(): Promise<EmailType | null> {
         const email = await this.emailsCollection.find({status: 'pending'}, {projection: {_id: false}}).sort({"createdAt": -1}).limit(1).toArray()
         if (!email[0]) {
             return null
         }
         const id = email[0].id
         await this.emailsCollection.updateOne({id}, {$set: {status: 'sending'}})
-        return email
+        return email[0]
     }
 
     async changeStatus(emailId: string, newStatus: string): Promise<boolean> {

@@ -93,7 +93,7 @@ export interface IUsersRepository {
 export interface IEmailsRepository {
     insertEmailToQueue(emailInfo: EmailType): Promise<boolean>
 
-    getEmailFromQueue(): Promise<EmailType[] | null>
+    getEmailFromQueue(): Promise<EmailType | null>
 
     changeStatus(emailId: string, newStatus: string): Promise<boolean>
 }

@@ -3,22 +3,19 @@ import {ioc} from "../IoCContainer";
 import {TYPES} from "../types/ioc";
 
 
-const EmailSender = ioc.get<EmailNotificationService>(TYPES.EmailNotificationService)
-const emailService = EmailSender.send.bind(EmailSender)
-//
-// let sheduler.start()
-// let sheduler.stop()
+const emailSender = ioc.get<EmailNotificationService>(TYPES.EmailNotificationService)
+
 
 const sendEmails = () => {
     setTimeout( async () => {
-        await emailService()
+        await emailSender.send()
         sendEmails()
     }, 3000)
 }
 
 
+
 export const scheduler = async () => {
-    // console.log('scheduler off manually')
     console.log('scheduler run')
     sendEmails()
 }

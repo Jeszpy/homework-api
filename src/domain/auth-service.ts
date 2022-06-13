@@ -18,6 +18,10 @@ export class AuthService implements IAuthService {
         if (!user) {
             return null
         }
+        // TODO !
+        // if (user.emailConfirmation.isConfirmed){
+        //     return
+        // }
         const expirationDate = new Date(user.emailConfirmation.expirationDate)
         if (+confirmationDate > +expirationDate) {
             return null
