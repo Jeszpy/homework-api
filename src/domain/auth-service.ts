@@ -12,16 +12,24 @@ export class AuthService implements IAuthService {
     constructor(@inject(TYPES.IUsersRepository) private usersRepository: IAuthRepository, @inject(TYPES.IEmailsRepository) private emailsRepository: IEmailsRepository) {
     }
 
+    async isCodeConfirmed(code: string): Promise<boolean> {
+        const user = await this.usersRepository.getUserByConfirmationCode(code)
+        if (!user) {
+            return false
+        }
+        if (user.emailConfirmation.isConfirmed) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     async confirmEmail(code: string): Promise<boolean | null> {
         const confirmationDate = new Date()
         const user = await this.usersRepository.getUserByConfirmationCode(code)
         if (!user) {
             return null
         }
-        // TODO !
-        // if (user.emailConfirmation.isConfirmed){
-        //     return
-        // }
         const expirationDate = new Date(user.emailConfirmation.expirationDate)
         if (+confirmationDate > +expirationDate) {
             return null
@@ -41,7 +49,7 @@ export class AuthService implements IAuthService {
     async registrationEmailResending(email: string): Promise<boolean> {
         const user = await this.usersRepository.getOneUserByEmail(email)
         console.log()
-        if (user!.emailConfirmation.isConfirmed){
+        if (user!.emailConfirmation.isConfirmed) {
             return false
         }
         const newUserInfo: UserAccountDBType = {
@@ -82,7 +90,7 @@ export interface IAuthRepository {
 
     findOneUserByLogin(login: string): Promise<boolean>
 
-    getOneUserByEmail(email:string): Promise<UserAccountDBType | null>
+    getOneUserByEmail(email: string): Promise<UserAccountDBType | null>
 
-    updateOneUserByEmail(email:string, updateData: UserAccountDBType): Promise<boolean>
+    updateOneUserByEmail(email: string, updateData: UserAccountDBType): Promise<boolean>
 }

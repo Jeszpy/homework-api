@@ -1,4 +1,4 @@
-import {Router,Request, Response} from "express";
+import {Router} from "express";
 import {ioc} from "../IoCContainer";
 import {AuthController} from "../presentation/AuthController";
 import {TYPES} from "../types/ioc"

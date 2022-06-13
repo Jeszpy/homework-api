@@ -25,6 +25,16 @@ const registrationCodeConfirmErrorMessage = () => {
         ]
     }
 }
+const codeAlreadyConfirmedError = () => {
+    return {
+        "errorsMessages": [
+            {
+                "message": 'this confirmation code has already been confirmed',
+                "field": 'code'
+            }
+        ]
+    }
+}
 
 
 @injectable()
@@ -33,12 +43,12 @@ export class AuthController {
     }
 
     private registrationEmailResendingErrorMessage = {
-            "errorsMessages": [
-                {
-                    "message": 'user with this email was not found',
-                    "field": 'email'
-                }
-            ]
+        "errorsMessages": [
+            {
+                "message": 'user with this email was not found',
+                "field": 'email'
+            }
+        ]
     }
 
     async registrationEmailResending(req: Request, res: Response) {
@@ -46,6 +56,8 @@ export class AuthController {
         const emailInDB = await this.authService.findOneUserByEmail(email)
         if (!emailInDB) {
             return res.send(this.registrationEmailResendingErrorMessage).status(400)
+        }
+        if (emailInDB!) {
         }
         const isResend = await this.authService.registrationEmailResending(email)
         return isResend ? res.sendStatus(204) : res.status(400).send(registrationCodeConfirmErrorMessage)
@@ -75,8 +87,12 @@ export class AuthController {
 
     async confirmEmail(req: Request, res: Response) {
         const {code} = req.body
-        const isConfirm = await this.authService.confirmEmail(code)
-        return isConfirm ? res.sendStatus(204) : res.sendStatus(400)
+        const isConfirm = await this.authService.isCodeConfirmed(code)
+        if (isConfirm) {
+            return res.status(400).send(codeAlreadyConfirmedError)
+        }
+        const confirm = await this.authService.confirmEmail(code)
+        return confirm ? res.sendStatus(204) : res.sendStatus(400)
     }
 }
 
@@ -88,4 +104,6 @@ export interface IAuthService {
     findOneUserByEmail(email: string): Promise<boolean>
 
     registrationEmailResending(email: string): Promise<boolean>
+
+    isCodeConfirmed(code: string): Promise<boolean>
 }

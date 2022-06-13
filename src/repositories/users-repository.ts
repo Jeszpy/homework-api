@@ -57,7 +57,7 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
 
 
     async getUserByConfirmationCode(code: string): Promise<UserAccountDBType | null> {
-        return await this.usersCollection.findOne({"emailConfirmation.confirmationCode": code})
+        return this.usersCollection.findOne({"emailConfirmation.confirmationCode": code})
     }
 
     async confirmEmailRegistration(user: UserAccountDBType): Promise<boolean> {
