@@ -4,37 +4,8 @@ import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
 import {IUsersService} from "./UsersController";
 
-const returnErrorMessage = (field: string) => {
-    return {
-        "errorsMessages": [
-            {
-                "message": `this ${field} has already been created`,
-                "field": field
-            }
-        ]
-    }
-}
 
-const registrationCodeConfirmErrorMessage = () => {
-    return {
-        "errorsMessages": [
-            {
-                "message": 'this email has already been confirmed',
-                "field": 'email'
-            }
-        ]
-    }
-}
-const codeAlreadyConfirmedError = () => {
-    return {
-        "errorsMessages": [
-            {
-                "message": 'this confirmation code has already been confirmed',
-                "field": 'code'
-            }
-        ]
-    }
-}
+
 
 
 @injectable()
@@ -51,16 +22,51 @@ export class AuthController {
         ]
     }
 
+    private codeAlreadyConfirmedError = () => {
+        return {
+            "errorsMessages": [
+                {
+                    "message": 'this confirmation code has already been confirmed',
+                    "field": 'code'
+                }
+            ]
+        }
+    }
+
+    private returnErrorMessage = (field: string) => {
+        return {
+            "errorsMessages": [
+                {
+                    "message": `this ${field} has already been created`,
+                    "field": field
+                }
+            ]
+        }
+    }
+
+    private registrationCodeConfirmErrorMessage = () => {
+        return {
+            "errorsMessages": [
+                {
+                    "message": 'this email has already been confirmed',
+                    "field": 'email'
+                }
+            ]
+        }
+    }
+
     async registrationEmailResending(req: Request, res: Response) {
         const {email} = req.body
         const emailInDB = await this.authService.findOneUserByEmail(email)
         if (!emailInDB) {
             return res.send(this.registrationEmailResendingErrorMessage).status(400)
         }
-        if (emailInDB!) {
-        }
+        // const isConfirm = await this.authService.isCodeConfirmed()
+        // if (isConfirm) {
+        //     return res.status(400).send(codeAlreadyConfirmedError)
+        // }
         const isResend = await this.authService.registrationEmailResending(email)
-        return isResend ? res.sendStatus(204) : res.status(400).send(registrationCodeConfirmErrorMessage)
+        return isResend ? res.sendStatus(204) : res.status(400).send(this.registrationCodeConfirmErrorMessage())
     }
 
 
@@ -74,11 +80,11 @@ export class AuthController {
         const {login, email, password} = req.body
         const emailInDB = await this.authService.findOneUserByEmail(email)
         if (emailInDB) {
-            return res.status(400).send(returnErrorMessage('email'))
+            return res.status(400).send(this.returnErrorMessage('email'))
         }
         const loginInDB = await this.authService.findOneUserByLogin(login)
         if (loginInDB) {
-            return res.status(400).send(returnErrorMessage('login'))
+            return res.status(400).send(this.returnErrorMessage('login'))
         }
         const user = await this.usersService.createUser(login, email, password)
         return user ? res.sendStatus(204) : res.sendStatus(400)
@@ -89,7 +95,7 @@ export class AuthController {
         const {code} = req.body
         const isConfirm = await this.authService.isCodeConfirmed(code)
         if (isConfirm) {
-            return res.status(400).send(codeAlreadyConfirmedError)
+            return res.status(400).send(this.codeAlreadyConfirmedError())
         }
         const confirm = await this.authService.confirmEmail(code)
         return confirm ? res.sendStatus(204) : res.sendStatus(400)
