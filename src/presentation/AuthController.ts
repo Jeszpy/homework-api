@@ -70,7 +70,7 @@ export class AuthController {
         const {email} = req.body
         const emailInDB = await this.authService.findOneUserByEmail(email)
         if (!emailInDB) {
-            return res.send(this.registrationEmailResendingErrorMessage()).status(400)
+            return res.status(400).send(this.registrationEmailResendingErrorMessage())
         }
         const isResend = await this.authService.registrationEmailResending(email)
         return isResend ? res.sendStatus(204) : res.status(400).send(this.registrationCodeConfirmErrorMessage())
