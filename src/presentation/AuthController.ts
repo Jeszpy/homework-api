@@ -11,13 +11,15 @@ export class AuthController {
     constructor(@inject(TYPES.JWTService) private jwtService: JWTService, @inject(TYPES.IUsersService) private usersService: IUsersService, @inject(TYPES.IAuthService) private authService: IAuthService) {
     }
 
-    private registrationEmailResendingErrorMessage = {
-        "errorsMessages": [
-            {
-                "message": 'user with this email was not found',
-                "field": 'email'
-            }
-        ]
+    private registrationEmailResendingErrorMessage = () => {
+        return {
+            "errorsMessages": [
+                {
+                    "message": 'user with this email was not found',
+                    "field": 'email'
+                }
+            ]
+        }
     }
 
     private codeAlreadyConfirmedError = () => {
@@ -68,7 +70,7 @@ export class AuthController {
         const {email} = req.body
         const emailInDB = await this.authService.findOneUserByEmail(email)
         if (!emailInDB) {
-            return res.send(this.registrationEmailResendingErrorMessage).status(400)
+            return res.send(this.registrationEmailResendingErrorMessage()).status(400)
         }
         const isResend = await this.authService.registrationEmailResending(email)
         return isResend ? res.sendStatus(204) : res.status(400).send(this.registrationCodeConfirmErrorMessage())
