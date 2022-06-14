@@ -22,8 +22,14 @@ const registration = authControllerIoC.registration.bind(authControllerIoC)
 const confirmEmail = authControllerIoC.confirmEmail.bind(authControllerIoC)
 const login = authControllerIoC.login.bind(authControllerIoC)
 
+authRouter.use(checkConnectionLimitsMiddleware)
 
-authRouter.post('/registration-email-resending', checkConnectionLimitsMiddleware, authRegistrationEmailResendingValidationParams, registrationEmailResending)
-authRouter.post('/registration', checkConnectionLimitsMiddleware, authRegistrationValidationParams, registration)
-authRouter.post('/registration-confirmation', checkConnectionLimitsMiddleware, authConfirmEmailValidationParams, confirmEmail)
-authRouter.post('/login', checkConnectionLimitsMiddleware, authLoginValidationParams, login)
+// authRouter.post('/registration-email-resending', checkConnectionLimitsMiddleware, authRegistrationEmailResendingValidationParams, registrationEmailResending)
+// authRouter.post('/registration', checkConnectionLimitsMiddleware, authRegistrationValidationParams, registration)
+// authRouter.post('/registration-confirmation', checkConnectionLimitsMiddleware, authConfirmEmailValidationParams, confirmEmail)
+// authRouter.post('/login', checkConnectionLimitsMiddleware, authLoginValidationParams, login)
+
+authRouter.post('/registration-email-resending', authRegistrationEmailResendingValidationParams, registrationEmailResending)
+authRouter.post('/registration', authRegistrationValidationParams, registration)
+authRouter.post('/registration-confirmation', authConfirmEmailValidationParams, confirmEmail)
+authRouter.post('/login', authLoginValidationParams, login)

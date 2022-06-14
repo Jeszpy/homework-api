@@ -61,10 +61,6 @@ export class AuthController {
         if (!emailInDB) {
             return res.send(this.registrationEmailResendingErrorMessage).status(400)
         }
-        // const isConfirm = await this.authService.isCodeConfirmed()
-        // if (isConfirm) {
-        //     return res.status(400).send(codeAlreadyConfirmedError)
-        // }
         const isResend = await this.authService.registrationEmailResending(email)
         return isResend ? res.sendStatus(204) : res.status(400).send(this.registrationCodeConfirmErrorMessage())
     }

@@ -9,3 +9,9 @@ export type BlockedConnectionType = {
     action: string,
     bannedAt: Date
 }
+
+export type BlockedUserType = {
+    action: string,
+    userName: string,
+    bannedAt: Date
+}
