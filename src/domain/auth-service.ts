@@ -78,7 +78,7 @@ export class AuthService implements IAuthService {
     }
 
     async findCodeInDB(code: string): Promise<UserAccountDBType | null>{
-        return this.findCodeInDB(code)
+        return this.usersRepository.findCodeInDB(code)
     }
 }
 
