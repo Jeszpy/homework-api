@@ -39,7 +39,6 @@ import {ITestingRepository, TestingService} from "./domain/testing-service";
 import {ITestingService, TestingController} from "./presentation/TestingController";
 import {HtmlTemplateService} from "./application/html-template-service";
 import {SmtpAdapter} from "./application/smtp-adapter";
-import {UsersConnectionsControlRepository} from "./repositories/users-connections-control-repository";
 
 
 // Repos
@@ -48,7 +47,6 @@ const commentsRepository = new CommentsRepository(commentsCollection)
 const bloggersRepository = new BloggersRepository(bloggersCollection)
 const usersRepository = new UsersRepository(usersCollection)
 const connectionsControlRepository = new ConnectionsControlRepository(connectionLimitsCollection, blockedConnectionCollection)
-const usersConnectionsControlRepository = new UsersConnectionsControlRepository(usersConnectionCollection, blockedUsersConnectionCollection)
 const emailsRepository = new EmailsRepository(emailsCollection)
 const testingRepository = new TestingRepository(connectionLimitsCollection, blockedConnectionCollection,
     bloggersCollection, commentsCollection, emailsCollection, postsCollection, usersCollection)
@@ -116,8 +114,6 @@ invContainer.bind<PaginationMiddleware>(TYPES.PaginationMiddleware).to(Paginatio
 invContainer.bind<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMiddleware).to(CheckConnectionLimitsMiddleware)
 
 invContainer.bind<IConnectionsControlRepository>(TYPES.IConnectionsControlRepository).toConstantValue(connectionsControlRepository)
-invContainer.bind<IUsersConnectionsControlRepository>(TYPES.IUsersConnectionsControlRepository).toConstantValue(usersConnectionsControlRepository)
-
 
 invContainer.bind<IEmailsRepository>(TYPES.IEmailsRepository).toConstantValue(emailsRepository)
 invContainer.bind<EmailNotificationService>(TYPES.EmailNotificationService).to(EmailNotificationService)

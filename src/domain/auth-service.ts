@@ -77,7 +77,9 @@ export class AuthService implements IAuthService {
         return true
     }
 
-
+    async findCodeInDB(code: string): Promise<UserAccountDBType | null>{
+        return this.findCodeInDB(code)
+    }
 }
 
 
@@ -93,4 +95,6 @@ export interface IAuthRepository {
     getOneUserByEmail(email: string): Promise<UserAccountDBType | null>
 
     updateOneUserByEmail(email: string, updateData: UserAccountDBType): Promise<boolean>
+
+    findCodeInDB(code: string): Promise<UserAccountDBType | null>
 }

@@ -3,9 +3,7 @@ import {Request, Response} from "express";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
 import {IUsersService} from "./UsersController";
-
-
-
+import {UserAccountDBType} from "../types/user";
 
 
 @injectable()
@@ -27,6 +25,17 @@ export class AuthController {
             "errorsMessages": [
                 {
                     "message": 'this confirmation code has already been confirmed',
+                    "field": 'code'
+                }
+            ]
+        }
+    }
+
+    private invalidConfirmationCodeError = () => {
+        return {
+            "errorsMessages": [
+                {
+                    "message": 'this confirmation code invalid',
                     "field": 'code'
                 }
             ]
@@ -89,8 +98,11 @@ export class AuthController {
 
     async confirmEmail(req: Request, res: Response) {
         const {code} = req.body
-        const isConfirm = await this.authService.isCodeConfirmed(code)
-        if (isConfirm) {
+        const codeInDB = await this.authService.findCodeInDB(code)
+        if (!codeInDB) {
+            return res.status(400).send(this.invalidConfirmationCodeError())
+        }
+        if (codeInDB.emailConfirmation.isConfirmed) {
             return res.status(400).send(this.codeAlreadyConfirmedError())
         }
         const confirm = await this.authService.confirmEmail(code)
@@ -108,4 +120,6 @@ export interface IAuthService {
     registrationEmailResending(email: string): Promise<boolean>
 
     isCodeConfirmed(code: string): Promise<boolean>
+
+    findCodeInDB(code: string): Promise<UserAccountDBType | null>
 }

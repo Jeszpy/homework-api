@@ -27,7 +27,6 @@ export class ConnectionsControlRepository implements IConnectionsControlReposito
             connectionAt: {$gt: dateLimit}
         })
         if (connectionsCounts >= connectionsLimit) {
-            console.log('banned scope')
             await this.blockedConnectionsCollection.insertOne({ip, action, bannedAt: connectionDate})
             return false
         }

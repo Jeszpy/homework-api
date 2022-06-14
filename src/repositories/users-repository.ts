@@ -85,4 +85,9 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
         const result = await this.usersCollection.updateOne({"accountData.email": email}, {$set: {...updateData}})
         return result.modifiedCount === 1
     }
+
+    async findCodeInDB(code: string): Promise<UserAccountDBType | null>{
+        const res = await this.usersCollection.findOne({'emailConfirmation.confirmationCode': code})
+        return res ? res : null
+    }
 }

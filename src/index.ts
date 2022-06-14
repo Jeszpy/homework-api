@@ -1,21 +1,19 @@
-import express from 'express'
-import {bloggersRouter} from "./routes/bloggers-router";
+import {settings} from "./settings";
 import {runDb} from "./repositories/mongo-db";
+import express from 'express'
+import cors from "cors";
+import {bloggersRouter} from "./routes/bloggers-router";
 import {postsRouter} from "./routes/posts-router";
 import {authRouter} from "./routes/auth-router";
 import {usersRouter} from "./routes/users-router";
-import {settings} from "./settings";
 import {commentsRouter} from "./routes/comments-router";
-import {scheduler} from "./application/scheduler";
 import {testingRouter} from "./routes/testing-router";
-
-const cors = require('cors')
+import {scheduler} from "./application/scheduler";
 
 const PORT = settings.PORT
 
 const app = express()
 app.set('trust proxy', true);
-
 app.use(cors())
 app.use(express.json())
 

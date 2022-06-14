@@ -32,8 +32,6 @@ export const TYPES = {
 
     CheckConnectionLimitsMiddleware: Symbol.for('CheckConnectionLimitsMiddleware'),
     IConnectionsControlRepository: Symbol.for('IConnectionsControlRepository'),
-    IUsersConnectionsControlRepository: Symbol.for('IUsersConnectionsControlRepository'),
-    IBlockedUsersConnectionsControlRepository: Symbol.for('IBlockedUsersConnectionsControlRepository'),
 
     IEmailsRepository: Symbol.for('IEmailsRepository'),
     EmailNotificationService: Symbol.for('EmailNotificationService'),

@@ -6,8 +6,7 @@ import {TYPES} from "../../types/ioc";
 
 @injectable()
 export class CheckConnectionLimitsMiddleware {
-    constructor(@inject(TYPES.IConnectionsControlRepository) private connectionsControlRepository: IConnectionsControlRepository,
-                @inject(TYPES.IUsersConnectionsControlRepository) private usersConnectionsControlRepository: IUsersConnectionsControlRepository) {
+    constructor(@inject(TYPES.IConnectionsControlRepository) private connectionsControlRepository: IConnectionsControlRepository) {
     }
 
     private connectionsLimitInterval = mixTimeInterval({seconds: 10})
@@ -18,14 +17,6 @@ export class CheckConnectionLimitsMiddleware {
         const connectionDate: Date = new Date()
         const ip: string = req.ip
         const action: string = (req.url).split('/').at(1)!
-        console.log(`${ip}: ${action}`)
-        // if (action === 'login'){
-        //     const userName = req.body.login
-        //     const isUserBlocked = await this.usersConnectionsControlRepository.checkUsersBlockedStatus(userName, action, connectionDate, this.blockedInterval)
-        //     if (isUserBlocked){
-        //         return res.send
-        //     }
-        // }
         const isBlocked = await this.connectionsControlRepository.checkBlockedStatus(ip, action, connectionDate, this.blockedInterval)
         if (isBlocked) {
             return res.sendStatus(429)
