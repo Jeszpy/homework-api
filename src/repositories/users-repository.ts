@@ -19,7 +19,7 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
     }
 
     async getOneUserById(id: string): Promise<UserIdAndLoginType | null> {
-        const user = await this.usersCollection.findOne({accountData: id})
+        const user = await this.usersCollection.findOne({'accountData.id': id})
         if (!user) {
             return null
         }
