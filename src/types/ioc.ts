@@ -19,6 +19,7 @@ export const TYPES = {
     ICommentsService: Symbol.for('ICommentsService'),
     CommentsController: Symbol.for('CommentsController'),
 
+    IJwtRepository: Symbol.for('IJwtRepository'),
     JWTAuthMiddleware: Symbol.for('jwtAuthMiddleware'),
     JWTService: Symbol.for('JWTService'),
 
@@ -42,4 +43,6 @@ export const TYPES = {
 
     HtmlTemplateService: Symbol.for('HtmlTemplateService'),
     SmtpAdapter: Symbol.for('SmtpAdapter'),
+
+
 }

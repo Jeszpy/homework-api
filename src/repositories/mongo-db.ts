@@ -7,6 +7,7 @@ import {UserAccountDBType} from "../types/user";
 import {PostType, PostWithDateType} from "../types/posts";
 import {BlockedConnectionType, BlockedUserType, ConnectionLimitsType} from "../types/connectionLimits";
 import {EmailType} from "../types/emails";
+import {JwtType} from "../types/jwt";
 
 const mongoUri = settings.mongoUri
 
@@ -24,6 +25,7 @@ export const blockedConnectionCollection = db.collection<BlockedConnectionType>(
 export const usersConnectionCollection = db.collection<BlockedUserType>('users-connections-management')
 export const blockedUsersConnectionCollection = db.collection<BlockedUserType>('users-connections-black-list-management')
 export const emailsCollection = db.collection<EmailType>('emails-management')
+export const jwtCollection = db.collection<JwtType>('jwt-management')
 
 export async function runDb() {
     try {

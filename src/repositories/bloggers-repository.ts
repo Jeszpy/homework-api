@@ -6,8 +6,6 @@ import {injectable} from "inversify";
 
 @injectable()
 export class BloggersRepository implements IBloggersRepository {
-    // constructor(private bloggersCollection: MongoClient.Collection<BloggerType>, private deletedBloggersCollection: MongoClient.Collection<BloggerWithDateType>) {
-    // }
     constructor(private bloggersCollection: MongoClient.Collection<BloggerType>) {
     }
 
