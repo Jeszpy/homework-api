@@ -12,7 +12,7 @@ import {BloggersController, IBloggersService} from "./presentation/BloggersContr
 import {UsersRepository} from "./repositories/users-repository";
 import {IEmailsRepository, IUsersRepository, UsersService} from "./domain/users-service";
 import {IUsersService, UsersController} from "./presentation/UsersController";
-import {JWTService} from "./application/jwt-service";
+import {IJwtRepository, JWTService} from "./application/jwt-service";
 import {AuthController, IAuthService} from "./presentation/AuthController";
 import {JWTAuthMiddleware} from "./middlewaries/auth/jwt-auth-middleware";
 import {BasicAuthMiddleware} from "./middlewaries/auth/basic-auth-middleware";
@@ -22,7 +22,7 @@ import {
     blockedConnectionCollection, blockedUsersConnectionCollection,
     bloggersCollection,
     commentsCollection, connectionLimitsCollection,
-    deletedPostsCollection, emailsCollection,
+    deletedPostsCollection, emailsCollection, jwtCollection,
     postsCollection,
     usersCollection, usersConnectionCollection
 } from "./repositories/mongo-db";
@@ -39,6 +39,7 @@ import {ITestingRepository, TestingService} from "./domain/testing-service";
 import {ITestingService, TestingController} from "./presentation/TestingController";
 import {HtmlTemplateService} from "./application/html-template-service";
 import {SmtpAdapter} from "./application/smtp-adapter";
+import {JwtRepository} from "./repositories/jwt-repository";
 
 
 // Repos
@@ -50,6 +51,8 @@ const connectionsControlRepository = new ConnectionsControlRepository(connection
 const emailsRepository = new EmailsRepository(emailsCollection)
 const testingRepository = new TestingRepository(connectionLimitsCollection, blockedConnectionCollection,
     bloggersCollection, commentsCollection, emailsCollection, postsCollection, usersCollection)
+const jwtRepository = new JwtRepository(jwtCollection)
+
 
 // Services
 // const commentsService = new CommentsService(commentsRepository)
@@ -106,6 +109,8 @@ invContainer.bind<IAuthRepository>(TYPES.IAuthRepository).toConstantValue(usersR
 invContainer.bind<IAuthService>(TYPES.IAuthService).to(AuthService)
 invContainer.bind<AuthController>(TYPES.AuthController).to(AuthController)
 
+
+invContainer.bind<IJwtRepository>(TYPES.IJwtRepository).toConstantValue(jwtRepository)
 invContainer.bind<JWTService>(TYPES.JWTService).to(JWTService)
 
 invContainer.bind<JWTAuthMiddleware>(TYPES.JWTAuthMiddleware).to(JWTAuthMiddleware)
@@ -124,6 +129,5 @@ invContainer.bind<TestingController>(TYPES.TestingController).to(TestingControll
 
 invContainer.bind<HtmlTemplateService>(TYPES.HtmlTemplateService).to(HtmlTemplateService)
 invContainer.bind<SmtpAdapter>(TYPES.SmtpAdapter).to(SmtpAdapter)
-
 
 export {invContainer as ioc}

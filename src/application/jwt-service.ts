@@ -16,8 +16,9 @@ export class JWTService {
             try {
                 const verify = await argon2.verify(user.password, password)
                 if (verify) {
-                    const token = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '1h'})
-                    return token
+                    const accessToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '1h'})
+                    // const refreshToken =
+                    return accessToken
                 }
             } catch (e) {
                 return null
@@ -36,5 +37,11 @@ export class JWTService {
         }
 
     }
+
+    // async
+
 }
 
+export interface IJwtRepository {
+
+}

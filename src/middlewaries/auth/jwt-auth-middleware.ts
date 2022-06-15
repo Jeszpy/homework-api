@@ -6,7 +6,7 @@ import {TYPES} from "../../types/ioc";
 
 @injectable()
 export class JWTAuthMiddleware {
-    constructor(@inject(TYPES.JWTService)private jwtService: JWTService, @inject(TYPES.IUsersService) private usersService: UsersService) {
+    constructor(@inject(TYPES.JWTService) private jwtService: JWTService, @inject(TYPES.IUsersService) private usersService: UsersService) {
     }
 
     async use(req: Request, res: Response, next: NextFunction) {
@@ -23,4 +23,7 @@ export class JWTAuthMiddleware {
         return res.sendStatus(401)
     }
 
+
 }
+
+
