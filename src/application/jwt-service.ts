@@ -19,10 +19,11 @@ export class JWTService {
         try {
             const verify = await argon2.verify(user.password, password)
             if (verify) {
-                const accessToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '1h'})
-                const refreshToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '30d'})
+                const accessToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: settings.ACCESS_TOKEN_EXPIRES_IN})
+                const refreshToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
                 await this.jwtRepository.saveRefreshToken(refreshToken)
-                // TODO: 1: создать эндпоинт для получения аксэс токена. 2: присылает рефреш -> проверяем рефреш -> генерируем новый аксесс и рефреш -> ,локаем тот рефреш токен который прислали -> отсылаем новый акссес и рефреш
+                // TODO: 1: создать эндпоинт для получения аксэс токена.
+                //  2: присылает рефреш -> проверяем рефреш -> генерируем новый аксесс и рефреш -> ,локаем тот рефреш токен который прислали -> отсылаем новый акссес и рефреш
                 return {accessToken, refreshToken}
             }
         } catch (e) {
