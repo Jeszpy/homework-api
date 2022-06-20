@@ -27,11 +27,11 @@ app.use('/ht_04/api/testing', testingRouter)
 
 
 const startApp = (async () => {
-    await runDb()
-    // await runDb() // mongoose
+    // await runDb()
+    await runDb() // mongoose
     app.listen(PORT, async () => {
         console.log(`Express app listening on port ${PORT}`)
-        // await scheduler()
+        await scheduler()
     })
 
 })
