@@ -10,23 +10,19 @@ export class BloggersRepository implements IBloggersRepository {
     }
 
     async getAllBloggers(filter: FilterQuery<BloggerType>, pageNumber: number, pageSize: number): Promise<BloggerType[]> {
-        const bloggers: BloggerType[] = await this.bloggersCollection.find(filter, {
-            projection: {_id: false},
-            skip: ((pageNumber - 1) * pageSize),
-            limit: (pageSize)
-        })
+        const bloggers: BloggerType[] = await this.bloggersCollection.find(filter, {_id: false, __v: false})
+            .skip((pageNumber-1) * pageSize)
+            .limit(pageSize)
         return bloggers
     }
 
     async createNewBlogger(newBlogger: BloggerType): Promise<BloggerType> {
         await this.bloggersCollection.create({...newBlogger})
-        // const createBlogger = await this.bloggersCollection.create({...newBlogger})
-        // createBlogger.save()
         return newBlogger
     }
 
     async getOneBloggerById(id: string): Promise<BloggerType | null> {
-        return await this.bloggersCollection.findOne({id}, {projection: {_id: false}})
+        return this.bloggersCollection.findOne({id},  {_id: false, __v: false})
     }
 
     async updateOneBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
