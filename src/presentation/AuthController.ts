@@ -116,6 +116,12 @@ export class AuthController {
         const confirm = await this.authService.confirmEmail(code)
         return confirm ? res.sendStatus(204) : res.sendStatus(400)
     }
+
+
+    async updateRefreshToken(req: Request, res: Response){
+        const refreshToken = 'refresh'
+        // const tokens =
+    }
 }
 
 export interface IAuthService {
