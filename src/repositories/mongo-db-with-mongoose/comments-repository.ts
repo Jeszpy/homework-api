@@ -1,30 +1,29 @@
-
-import * as MongoClient from "mongodb";
 import {Filter} from "mongodb";
 import {injectable} from "inversify";
 import {ICommentsRepository} from "../../domain/comments-service";
 import {CommentsType, CommentsWithoutPostIdType} from "../../types/comments";
+import * as mongoose from "mongoose";
+import {FilterQuery} from "mongoose";
 
 @injectable()
 export class CommentsRepository implements ICommentsRepository {
-    constructor(private commentsCollection: MongoClient.Collection<CommentsType>) {
+    constructor(private commentsCollection: mongoose.Model<CommentsType>) {
     }
 
     async getOneCommentById(commentId: string): Promise<CommentsWithoutPostIdType | null> {
-        return await this.commentsCollection.findOne({id: commentId}, {projection: {_id: false, postId: false}})
+        return this.commentsCollection.findOne({id: commentId}, {_id: false, __iv: false, postId: false})
     }
 
     async getCommentsForSpecificPost(postId: string, pageNumber: number, pageSize: number): Promise<CommentsWithoutPostIdType[]> {
-        return await this.commentsCollection
-            .find({postId}, {
-                projection: {_id: false, postId: false},
-                skip: ((pageNumber - 1) * pageSize),
-                limit: (pageSize)
-            }).toArray()
+        return this.commentsCollection.find({postId}, {
+            _id: false,
+            __v: false,
+            postId: false
+        }).skip((pageNumber - 1) * pageSize).limit(pageSize)
     }
 
     async createComment(newComment: CommentsType): Promise<CommentsWithoutPostIdType> {
-        await this.commentsCollection.insertOne({...newComment})
+        await this.commentsCollection.create({...newComment})
         const result: CommentsWithoutPostIdType = {
             id: newComment.id,
             content: newComment.content,
@@ -49,7 +48,7 @@ export class CommentsRepository implements ICommentsRepository {
         return result.deletedCount === 1
     }
 
-    async getTotalCount(filter: Filter<CommentsType>): Promise<number> {
+    async getTotalCount(filter: FilterQuery<CommentsType>): Promise<number> {
         return this.commentsCollection.countDocuments(filter)
     }
 }

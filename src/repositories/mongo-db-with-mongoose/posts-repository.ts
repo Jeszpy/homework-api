@@ -2,30 +2,31 @@ import * as MongoClient from "mongodb";
 import {Filter} from "mongodb";
 import {injectable} from "inversify";
 import {IPostsRepository} from "../../domain/posts-service";
-import {PostType, PostWithDateType} from "../../types/posts";
+import {PostType} from "../../types/posts";
+import {FilterQuery} from "mongoose";
+import * as mongoose from "mongoose";
 
 @injectable()
 export class PostsRepository implements IPostsRepository {
 
-    constructor(private postsCollection: MongoClient.Collection<PostType>, private deletedPostsCollection: MongoClient.Collection<PostWithDateType>) {
+    constructor(private postsCollection: mongoose.Model<PostType>) {
     }
 
-    async getAllPosts(searchNameTerm: Filter<PostType>, pageNumber: number, pageSize: number): Promise<PostType[]> {
+    async getAllPosts(searchNameTerm: FilterQuery<PostType>, pageNumber: number, pageSize: number): Promise<PostType[]> {
         const posts = await this.postsCollection.find(searchNameTerm, {
-            projection: {_id: false},
-            skip: ((pageNumber - 1) * pageSize),
-            limit: (pageSize)
-        }).toArray()
+            _id: false,
+            __v: false
+        }).skip((pageNumber - 1) * pageSize).limit(pageSize)
         return posts
     }
 
     async createNewPost(newPost: PostType): Promise<PostType> {
-        await this.postsCollection.insertOne({...newPost})
+        await this.postsCollection.create({...newPost})
         return newPost
     }
 
     async getOnePostById(id: string): Promise<PostType | null> {
-        return await this.postsCollection.findOne({id}, {projection: {_id: false}})
+        return this.postsCollection.findOne({id}, {_id: false, __v: false})
     }
 
     async updateOnePost(id: string, updatePostData: PostType): Promise<boolean> {
@@ -58,11 +59,7 @@ export class PostsRepository implements IPostsRepository {
         }
     }
 
-    async insertToDeletedPosts(post: PostWithDateType) {
-        return await this.deletedPostsCollection.insertOne(post)
-    }
-
-    async getTotalCount(filter: Filter<PostType>): Promise<number> {
+    async getTotalCount(filter: FilterQuery<PostType>): Promise<number> {
         return this.postsCollection.countDocuments(filter)
     }
 }

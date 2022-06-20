@@ -1,15 +1,11 @@
 import {Container} from "inversify";
 import "reflect-metadata";
-import {PostsRepository} from "./repositories/mongo-db/posts-repository";
 import {IPostsRepository, PostsService} from "./domain/posts-service";
 import {IPostsService, PostsController} from "./presentation/PostsController";
-import {CommentsRepository} from "./repositories/mongo-db/comments-repository";
 import {CommentsService, ICommentsRepository} from "./domain/comments-service";
 import {CommentsController, ICommentsService} from "./presentation/CommentsController";
-// import {BloggersRepository} from "./repositories/mongo-db/bloggers-repository";
 import {BloggersService, IBloggersRepository} from "./domain/bloggers-service";
 import {BloggersController, IBloggersService} from "./presentation/BloggersController";
-import {UsersRepository} from "./repositories/mongo-db/users-repository";
 import {IEmailsRepository, IUsersRepository, UsersService} from "./domain/users-service";
 import {IUsersService, UsersController} from "./presentation/UsersController";
 import {IJwtRepository, JWTService} from "./application/jwt-service";
@@ -19,42 +15,74 @@ import {BasicAuthMiddleware} from "./middlewaries/auth/basic-auth-middleware";
 import {PaginationMiddleware} from "./middlewaries/pagination-middleware";
 import {TYPES} from "./types/ioc";
 import {
-    blockedConnectionCollection, blockedUsersConnectionCollection,
-    bloggersCollection,
-    commentsCollection, connectionLimitsCollection,
-    deletedPostsCollection, emailsCollection, jwtCollection,
-    postsCollection,
-    usersCollection, usersConnectionCollection
-} from "./repositories/mongo-db/mongo-db";
-import {
     CheckConnectionLimitsMiddleware,
-    IConnectionsControlRepository, IUsersConnectionsControlRepository
+    IConnectionsControlRepository
 } from "./middlewaries/auth/check-connection-limits-middleware";
 import {AuthService, IAuthRepository} from "./domain/auth-service";
-import {ConnectionsControlRepository} from "./repositories/mongo-db/connections-control-repository";
-import {EmailsRepository} from "./repositories/mongo-db/emails-repository";
 import {EmailNotificationService} from "./domain/email-notification-service";
-import {TestingRepository} from "./repositories/mongo-db/testing-repository";
 import {ITestingRepository, TestingService} from "./domain/testing-service";
 import {ITestingService, TestingController} from "./presentation/TestingController";
 import {HtmlTemplateService} from "./application/html-template-service";
 import {SmtpAdapter} from "./application/smtp-adapter";
-import {JwtRepository} from "./repositories/mongo-db/jwt-repository";
 import {BloggersRepository} from "./repositories/mongo-db-with-mongoose/bloggers-repository";
-import {BloggersModel} from "./repositories/mongo-db-with-mongoose/models";
+import {
+    BlockedConnectionsModel,
+    BloggersModel,
+    CommentsModel,
+    ConnectionsLimitModel, EmailsModel, JwtModel,
+    PostsModel,
+    UsersModel
+} from "./repositories/mongo-db-with-mongoose/models";
+import {PostsRepository} from "./repositories/mongo-db-with-mongoose/posts-repository";
+import {CommentsRepository} from "./repositories/mongo-db-with-mongoose/comments-repository";
+import {UsersRepository} from "./repositories/mongo-db-with-mongoose/users-repository";
+import {ConnectionsControlRepository} from "./repositories/mongo-db-with-mongoose/connections-control-repository";
+import {EmailsRepository} from "./repositories/mongo-db-with-mongoose/emails-repository";
+import {JwtRepository} from "./repositories/mongo-db-with-mongoose/jwt-repository";
+import {TestingRepository} from "./repositories/mongo-db-with-mongoose/testing-repository";
 
 
-// Repos
-const postsRepository = new PostsRepository(postsCollection, deletedPostsCollection)
-const commentsRepository = new CommentsRepository(commentsCollection)
+// Old imports for native mongoose
+// import {
+//     blockedConnectionCollection, blockedUsersConnectionCollection,
+//     bloggersCollection,
+//     commentsCollection, connectionLimitsCollection,
+//     emailsCollection, jwtCollection,
+//     postsCollection,
+//     usersCollection
+// } from "./repositories/mongo-db/mongo-db";
+// import {BloggersRepository} from "./repositories/mongo-db/bloggers-repository";
+// import {PostsRepository} from "./repositories/mongo-db/posts-repository";
+// import {CommentsRepository} from "./repositories/mongo-db/comments-repository";
+// import {UsersRepository} from "./repositories/mongo-db/users-repository";
+// import {JwtRepository} from "./repositories/mongo-db/jwt-repository";
+// import {ConnectionsControlRepository} from "./repositories/mongo-db/connections-control-repository";
+// import {EmailsRepository} from "./repositories/mongo-db/emails-repository";
+// import {TestingRepository} from "./repositories/mongo-db/testing-repository";
+
+
+// Repos with native mongoDB driver
+// const postsRepository = new PostsRepository(postsCollection)
+// const commentsRepository = new CommentsRepository(commentsCollection)
 // const bloggersRepository = new BloggersRepository(bloggersCollection)
+// const usersRepository = new UsersRepository(usersCollection)
+// const connectionsControlRepository = new ConnectionsControlRepository(connectionLimitsCollection, blockedConnectionCollection)
+// const emailsRepository = new EmailsRepository(emailsCollection)
+// const jwtRepository = new JwtRepository(jwtCollection)
+// const testingRepository = new TestingRepository(connectionLimitsCollection, blockedConnectionCollection,
+//     bloggersCollection, commentsCollection, emailsCollection, postsCollection, usersCollection)
+
+
+// Repos mongoDB with mongoose
+const postsRepository = new PostsRepository(PostsModel)
+const commentsRepository = new CommentsRepository(CommentsModel)
 const bloggersRepository = new BloggersRepository(BloggersModel)
-const usersRepository = new UsersRepository(usersCollection)
-const connectionsControlRepository = new ConnectionsControlRepository(connectionLimitsCollection, blockedConnectionCollection)
-const emailsRepository = new EmailsRepository(emailsCollection)
-const testingRepository = new TestingRepository(connectionLimitsCollection, blockedConnectionCollection,
-    bloggersCollection, commentsCollection, emailsCollection, postsCollection, usersCollection)
-const jwtRepository = new JwtRepository(jwtCollection)
+const usersRepository = new UsersRepository(UsersModel)
+const connectionsControlRepository = new ConnectionsControlRepository(ConnectionsLimitModel, BlockedConnectionsModel)
+const emailsRepository = new EmailsRepository(EmailsModel)
+const jwtRepository = new JwtRepository(JwtModel)
+const testingRepository = new TestingRepository(ConnectionsLimitModel, BlockedConnectionsModel,
+    BloggersModel, CommentsModel, EmailsModel, PostsModel, UsersModel)
 
 
 // Services

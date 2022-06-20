@@ -1,14 +1,13 @@
-
-import * as MongoClient from "mongodb";
-import {Filter} from "mongodb";
 import {injectable} from "inversify";
 import {IUsersRepository} from "../../domain/users-service";
 import {IAuthRepository} from "../../domain/auth-service";
 import {UserAccountDBType, UserAccountType, UserIdAndLoginType} from "../../types/user";
+import * as mongoose from "mongoose";
+import {FilterQuery} from "mongoose";
 
 @injectable()
 export class UsersRepository implements IUsersRepository, IAuthRepository {
-    constructor(private usersCollection: MongoClient.Collection<UserAccountDBType>) {
+    constructor(private usersCollection: mongoose.Model<UserAccountDBType>) {
     }
 
     async getOneUserForJWT(login: string): Promise<UserAccountType | null> {
@@ -32,15 +31,13 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
 
     async getAllUsers(pageNumber: number, pageSize: number): Promise<UserIdAndLoginType[]> {
         const allUsers = await this.usersCollection.find({}, {
-            projection: {_id: false, accountData: {id: true, login: true}},
-            skip: ((pageNumber - 1) * pageSize),
-            limit: (pageSize),
-        }).toArray()
+            _id: false, accountData: {id: true, __v: false, login: true}
+        }).skip((pageNumber - 1) * pageSize).limit(pageSize)
         return allUsers.map(u => ({id: u.accountData.id, login: u.accountData.login}))
     }
 
     async createUser(newUser: UserAccountDBType): Promise<UserIdAndLoginType> {
-        await this.usersCollection.insertOne({...newUser})
+        await this.usersCollection.create({...newUser})
         return {
             id: newUser.accountData.id,
             login: newUser.accountData.login
@@ -52,7 +49,7 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
         return isUserDeleted.deletedCount === 1
     }
 
-    async getTotalCount(filter: Filter<UserAccountDBType>): Promise<number> {
+    async getTotalCount(filter: FilterQuery<UserAccountDBType>): Promise<number> {
         return this.usersCollection.countDocuments(filter)
     }
 
@@ -79,7 +76,7 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
     }
 
     async getOneUserByEmail(email: string): Promise<UserAccountDBType | null> {
-        return await this.usersCollection.findOne({"accountData.email": email})
+        return this.usersCollection.findOne({"accountData.email": email})
     }
 
     async updateOneUserByEmail(email: string, updateData: UserAccountDBType): Promise<boolean> {
@@ -87,7 +84,7 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
         return result.modifiedCount === 1
     }
 
-    async findCodeInDB(code: string): Promise<UserAccountDBType | null>{
+    async findCodeInDB(code: string): Promise<UserAccountDBType | null> {
         const res = await this.usersCollection.findOne({'emailConfirmation.confirmationCode': code})
         return res ? res : null
     }

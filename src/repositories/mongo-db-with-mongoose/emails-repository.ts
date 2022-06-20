@@ -1,20 +1,20 @@
 import { injectable} from "inversify";
-import * as MongoClient from "mongodb";
 import {IEmailsRepository} from "../../domain/users-service";
 import {EmailType} from "../../types/emails";
+import * as mongoose from "mongoose";
 
 @injectable()
 export class EmailsRepository implements IEmailsRepository {
-    constructor(private emailsCollection: MongoClient.Collection<EmailType>) {
+    constructor(private emailsCollection: mongoose.Model<EmailType>) {
     }
 
     async insertEmailToQueue(emailInfo: EmailType): Promise<boolean> {
-        const isInserted = await this.emailsCollection.insertOne(emailInfo)
-        return isInserted.acknowledged
+        await this.emailsCollection.create(emailInfo)
+        return true
     }
 
     async getEmailFromQueue(): Promise<EmailType | null> {
-        const email = await this.emailsCollection.find({status: 'pending'}, {projection: {_id: false}}).sort({"createdAt": -1}).limit(1).toArray()
+        const email = await this.emailsCollection.find({status: 'pending'}, {projection: {_id: false}}).sort({"createdAt": -1}).limit(1)
         if (!email[0]) {
             return null
         }

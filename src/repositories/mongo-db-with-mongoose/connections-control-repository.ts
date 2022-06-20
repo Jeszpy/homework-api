@@ -1,10 +1,10 @@
-import * as MongoClient from "mongodb";
 import {BlockedConnectionType, ConnectionLimitsType} from "../../types/connectionLimits";
 import {IConnectionsControlRepository} from "../../middlewaries/auth/check-connection-limits-middleware";
+import * as mongoose from "mongoose";
 
 
 export class ConnectionsControlRepository implements IConnectionsControlRepository {
-    constructor(private connectionLimitsCollection: MongoClient.Collection<ConnectionLimitsType>, private blockedConnectionsCollection: MongoClient.Collection<BlockedConnectionType>) {
+    constructor(private connectionLimitsCollection: mongoose.Model<ConnectionLimitsType>, private blockedConnectionsCollection: mongoose.Model<BlockedConnectionType>) {
     }
 
     async checkBlockedStatus(ip: string, action: string, connectionDate: Date, blockedInterval: number): Promise<boolean> {
@@ -27,10 +27,10 @@ export class ConnectionsControlRepository implements IConnectionsControlReposito
             connectionAt: {$gt: dateLimit}
         })
         if (connectionsCounts >= connectionsLimit) {
-            await this.blockedConnectionsCollection.insertOne({ip, action, bannedAt: connectionDate})
+            await this.blockedConnectionsCollection.create({ip, action, bannedAt: connectionDate})
             return false
         }
-        await this.connectionLimitsCollection.insertOne({ip, action, connectionAt: connectionDate})
+        await this.connectionLimitsCollection.create({ip, action, connectionAt: connectionDate})
         return true
     }
 

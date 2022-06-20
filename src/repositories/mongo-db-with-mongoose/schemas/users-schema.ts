@@ -9,26 +9,26 @@ import {
 
 
 const userAccountSchema = new mongoose.Schema<UserAccountType>({
-    id: {String},
-    login: {String},
-    email: {String},
-    password: {String},
-    createdAt: {Date, default: Date.now}
+    id: {type: String, required: true},
+    login: {type: String, required: true},
+    email: {type: String, required: true},
+    password: {type: String, required: true},
+    createdAt: {type: Date, default: Date.now}
 })
 
 const loginAttemptSchema = new mongoose.Schema<LoginAttemptType>({
-    attemptDate: {Date, default: Date.now},
-    ip: {String}
+    attemptDate: {type: Date, default: Date.now},
+    ip: {type: String, required: true},
 })
 
 const sentConfirmationEmailSchema = new mongoose.Schema<SentConfirmationEmailType>({
-    sentDate: {Date},
+    sentDate: {type: Date},
 })
 
 const emailConfirmationSchema = new mongoose.Schema<EmailConfirmationType>({
-    isConfirmed: {Boolean, default: false},
-    confirmationCode: {String},
-    expirationDate: {Date, required: true},
+    isConfirmed: {type: Boolean, default: false},
+    confirmationCode: {type: String, required: true},
+    expirationDate: {type: Date, required: true},
     sentEmails: [sentConfirmationEmailSchema]
 })
 
