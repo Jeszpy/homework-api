@@ -6,7 +6,6 @@ import {IPostsService, PostsController} from "./presentation/PostsController";
 import {CommentsRepository} from "./repositories/mongo-db/comments-repository";
 import {CommentsService, ICommentsRepository} from "./domain/comments-service";
 import {CommentsController, ICommentsService} from "./presentation/CommentsController";
-// import {BloggersRepository} from "./repositories/mongo-db/bloggers-repository";
 import {BloggersService, IBloggersRepository} from "./domain/bloggers-service";
 import {BloggersController, IBloggersService} from "./presentation/BloggersController";
 import {UsersRepository} from "./repositories/mongo-db/users-repository";
@@ -19,16 +18,16 @@ import {BasicAuthMiddleware} from "./middlewaries/auth/basic-auth-middleware";
 import {PaginationMiddleware} from "./middlewaries/pagination-middleware";
 import {TYPES} from "./types/ioc";
 import {
-    blockedConnectionCollection, blockedUsersConnectionCollection,
+    blockedConnectionCollection,
     bloggersCollection,
     commentsCollection, connectionLimitsCollection,
     deletedPostsCollection, emailsCollection, jwtCollection,
     postsCollection,
-    usersCollection, usersConnectionCollection
+    usersCollection
 } from "./repositories/mongo-db/mongo-db";
 import {
     CheckConnectionLimitsMiddleware,
-    IConnectionsControlRepository, IUsersConnectionsControlRepository
+    IConnectionsControlRepository
 } from "./middlewaries/auth/check-connection-limits-middleware";
 import {AuthService, IAuthRepository} from "./domain/auth-service";
 import {ConnectionsControlRepository} from "./repositories/mongo-db/connections-control-repository";
@@ -42,19 +41,22 @@ import {SmtpAdapter} from "./application/smtp-adapter";
 import {JwtRepository} from "./repositories/mongo-db/jwt-repository";
 import {BloggersRepository} from "./repositories/mongo-db-with-mongoose/bloggers-repository";
 import {BloggersModel} from "./repositories/mongo-db-with-mongoose/models";
+// import {BloggersRepository} from "./repositories/mongo-db/bloggers-repository";
 
 
-// Repos
+// Repos for native mongoDB driver
+// const bloggersRepository = new BloggersRepository(bloggersCollection)
 const postsRepository = new PostsRepository(postsCollection, deletedPostsCollection)
 const commentsRepository = new CommentsRepository(commentsCollection)
-// const bloggersRepository = new BloggersRepository(bloggersCollection)
-const bloggersRepository = new BloggersRepository(BloggersModel)
 const usersRepository = new UsersRepository(usersCollection)
 const connectionsControlRepository = new ConnectionsControlRepository(connectionLimitsCollection, blockedConnectionCollection)
 const emailsRepository = new EmailsRepository(emailsCollection)
 const testingRepository = new TestingRepository(connectionLimitsCollection, blockedConnectionCollection,
     bloggersCollection, commentsCollection, emailsCollection, postsCollection, usersCollection)
 const jwtRepository = new JwtRepository(jwtCollection)
+
+// Repos for mongoose
+const bloggersRepository = new BloggersRepository(BloggersModel)
 
 
 // Services

@@ -21,7 +21,9 @@ export class JWTService {
             if (verify) {
                 const accessToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: settings.ACCESS_TOKEN_EXPIRES_IN})
                 const refreshToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
-                await this.jwtRepository.saveRefreshToken(refreshToken)
+                // const oldRefreshToken = await this.jwtRepository.findRefreshTokenByUserId(user.id)
+                // await this.jwtRepository.blockOldRefreshToken(user.id, oldRefreshToken)
+                await this.jwtRepository.saveNewRefreshToken(user.id, refreshToken)
                 // TODO: 1: создать эндпоинт для получения аксэс токена.
                 //  2: присылает рефреш -> проверяем рефреш -> генерируем новый аксесс и рефреш -> ,локаем тот рефреш токен который прислали -> отсылаем новый акссес и рефреш
                 return {accessToken, refreshToken}
@@ -39,7 +41,6 @@ export class JWTService {
         } catch (e) {
             return null
         }
-
     }
 
     // async
@@ -48,5 +49,9 @@ export class JWTService {
 
 export interface IJwtRepository {
 
-    saveRefreshToken(refreshToken: string): Promise<void>
+    // findRefreshTokenByUserId(userId: string): Promise<JwtType | null>
+
+    saveNewRefreshToken(userId: string, refreshToken: string): Promise<void>
+
+    blockOldRefreshToken(userId: string, refreshToken: string): Promise<void>
 }

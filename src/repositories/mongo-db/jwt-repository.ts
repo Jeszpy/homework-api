@@ -7,9 +7,16 @@ export class JwtRepository implements IJwtRepository {
     constructor(private jwtCollection: MongoClient.Collection<JwtType>) {
     }
 
-    async saveRefreshToken(refreshToken: string): Promise<void> {
-        await this.jwtCollection.insertOne({refreshToken, blocked: false})
+    // async findRefreshTokenByUserId(userId: string): Promise<string> {
+    //     const token = await  this.jwtCollection.findOne({userId})
+    //     return token?.refreshToken
+    // }
+
+    async saveNewRefreshToken(userId: string, refreshToken: string): Promise<void> {
+        await this.jwtCollection.insertOne({userId, refreshToken, blocked: false})
     }
 
+    async blockOldRefreshToken(refreshToken: string): Promise<void> {
 
+    }
 }

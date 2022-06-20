@@ -3,6 +3,7 @@ import {JwtType} from "../../../types/jwt";
 
 
 export const jwtSchema = new mongoose.Schema<JwtType>({
-    refreshToken: {String},
-    blocked: {Boolean, default: false}
+    userId: {type: String, required: true},
+    refreshToken: {type: String, required: true},
+    blocked: {type: Boolean, default: false}
 })

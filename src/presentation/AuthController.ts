@@ -79,8 +79,14 @@ export class AuthController {
 
     async login(req: Request, res: Response) {
         const {login, password} = req.body
-        const token = await this.jwtService.createJWT(login, password)
-        return token ? res.send({token}) : res.sendStatus(401)
+        const tokens = await this.jwtService.createJWT(login, password)
+        if (!tokens) {
+            return res.sendStatus(401)
+        }
+        return tokens ? res.send({
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken
+        }) : res.sendStatus(401)
     }
 
     async registration(req: Request, res: Response) {
