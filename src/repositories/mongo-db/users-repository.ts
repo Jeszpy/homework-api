@@ -1,9 +1,9 @@
-import {UserAccountDBType, UserAccountType, UserIdAndLoginType} from "../types/user";
+import {UserAccountDBType, UserAccountType, UserIdAndLoginType} from "../../types/user";
 import * as MongoClient from "mongodb";
-import {IUsersRepository} from "../domain/users-service";
+import {IUsersRepository} from "../../domain/users-service";
 import {Filter} from "mongodb";
 import {injectable} from "inversify";
-import {IAuthRepository} from "../domain/auth-service";
+import {IAuthRepository} from "../../domain/auth-service";
 
 @injectable()
 export class UsersRepository implements IUsersRepository, IAuthRepository {

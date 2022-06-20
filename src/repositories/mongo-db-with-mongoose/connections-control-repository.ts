@@ -1,6 +1,6 @@
 import * as MongoClient from "mongodb";
-import {BlockedConnectionType, ConnectionLimitsType} from "../types/connectionLimits";
-import {IConnectionsControlRepository} from "../middlewaries/auth/check-connection-limits-middleware";
+import {BlockedConnectionType, ConnectionLimitsType} from "../../types/connectionLimits";
+import {IConnectionsControlRepository} from "../../middlewaries/auth/check-connection-limits-middleware";
 
 
 export class ConnectionsControlRepository implements IConnectionsControlRepository {

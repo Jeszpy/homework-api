@@ -1,11 +1,11 @@
-import {ITestingRepository} from "../domain/testing-service";
+import {ITestingRepository} from "../../domain/testing-service";
 import * as MongoClient from "mongodb";
-import {BlockedConnectionType, ConnectionLimitsType} from "../types/connectionLimits";
-import {BloggerType} from "../types/bloggers";
-import {CommentsType} from "../types/comments";
-import {EmailType} from "../types/emails";
-import {PostType} from "../types/posts";
-import {UserAccountDBType} from "../types/user";
+import {BlockedConnectionType, ConnectionLimitsType} from "../../types/connectionLimits";
+import {BloggerType} from "../../types/bloggers";
+import {CommentsType} from "../../types/comments";
+import {EmailType} from "../../types/emails";
+import {PostType} from "../../types/posts";
+import {UserAccountDBType} from "../../types/user";
 
 
 export class TestingRepository implements ITestingRepository {

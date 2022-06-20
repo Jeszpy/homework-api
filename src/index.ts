@@ -1,5 +1,5 @@
 import {settings} from "./settings";
-import {runDb} from "./repositories/mongo-db";
+// import {runDb} from "./repositories/mongo-db/mongo-db";
 import express from 'express'
 import cors from "cors";
 import {bloggersRouter} from "./routes/bloggers-router";
@@ -9,6 +9,7 @@ import {usersRouter} from "./routes/users-router";
 import {commentsRouter} from "./routes/comments-router";
 import {testingRouter} from "./routes/testing-router";
 import {scheduler} from "./application/scheduler";
+import {runDb} from "./repositories/mongo-db-with-mongoose/mongoose-mongo-db";
 
 const PORT = settings.PORT
 
@@ -27,9 +28,10 @@ app.use('/ht_04/api/testing', testingRouter)
 
 const startApp = (async () => {
     await runDb()
+    // await runDb() // mongoose
     app.listen(PORT, async () => {
         console.log(`Express app listening on port ${PORT}`)
-        await scheduler()
+        // await scheduler()
     })
 
 })

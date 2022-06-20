@@ -1,13 +1,13 @@
 import mongoose from 'mongoose'
 import {MongoClient} from 'mongodb'
-import {settings} from "../settings";
-import {CommentsType} from "../types/comments";
-import {BloggerType, BloggerWithDateType} from "../types/bloggers";
-import {UserAccountDBType} from "../types/user";
-import {PostType, PostWithDateType} from "../types/posts";
-import {BlockedConnectionType, BlockedUserType, ConnectionLimitsType} from "../types/connectionLimits";
-import {EmailType} from "../types/emails";
-import {JwtType} from "../types/jwt";
+import {settings} from "../../settings";
+import {CommentsType} from "../../types/comments";
+import {BloggerType, BloggerWithDateType} from "../../types/bloggers";
+import {UserAccountDBType} from "../../types/user";
+import {PostType, PostWithDateType} from "../../types/posts";
+import {BlockedConnectionType, BlockedUserType, ConnectionLimitsType} from "../../types/connectionLimits";
+import {EmailType} from "../../types/emails";
+import {JwtType} from "../../types/jwt";
 
 const mongoUri = settings.mongoUri
 

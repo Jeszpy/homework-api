@@ -1,8 +1,9 @@
-import {CommentsType, CommentsWithoutPostIdType} from "../types/comments";
+
 import * as MongoClient from "mongodb";
-import {ICommentsRepository} from "../domain/comments-service";
 import {Filter} from "mongodb";
 import {injectable} from "inversify";
+import {ICommentsRepository} from "../../domain/comments-service";
+import {CommentsType, CommentsWithoutPostIdType} from "../../types/comments";
 
 @injectable()
 export class CommentsRepository implements ICommentsRepository {

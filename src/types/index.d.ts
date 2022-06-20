@@ -1,4 +1,4 @@
-import {UserAccountType} from "../repositories/users-repository";
+import {UserAccountType} from "../repositories/mongo-db/users-repository";
 
 
 declare global{

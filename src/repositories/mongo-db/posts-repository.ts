@@ -1,7 +1,7 @@
-import {PostType, PostWithDateType} from "../types/posts";
+import {PostType, PostWithDateType} from "../../types/posts";
 import * as MongoClient from "mongodb";
 import {Filter} from "mongodb";
-import {IPostsRepository} from "../domain/posts-service";
+import {IPostsRepository} from "../../domain/posts-service";
 import {injectable} from "inversify";
 
 @injectable()

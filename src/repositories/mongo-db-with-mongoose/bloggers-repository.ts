@@ -1,25 +1,27 @@
-import {BloggerType} from "../types/bloggers";
-import * as MongoClient from 'mongodb'
-import {Filter} from "mongodb";
-import {IBloggersRepository} from "../domain/bloggers-service";
 import {injectable} from "inversify";
+import {IBloggersRepository} from "../../domain/bloggers-service";
+import {BloggerType} from "../../types/bloggers";
+import * as mongoose from "mongoose";
+import {FilterQuery} from "mongoose";
 
 @injectable()
 export class BloggersRepository implements IBloggersRepository {
-    constructor(private bloggersCollection: MongoClient.Collection<BloggerType>) {
+    constructor(private bloggersCollection: mongoose.Model<BloggerType>) {
     }
 
-    async getAllBloggers(filter: Filter<BloggerType>, pageNumber: number, pageSize: number): Promise<BloggerType[]> {
+    async getAllBloggers(filter: FilterQuery<BloggerType>, pageNumber: number, pageSize: number): Promise<BloggerType[]> {
         const bloggers: BloggerType[] = await this.bloggersCollection.find(filter, {
             projection: {_id: false},
             skip: ((pageNumber - 1) * pageSize),
             limit: (pageSize)
-        }).toArray()
+        })
         return bloggers
     }
 
     async createNewBlogger(newBlogger: BloggerType): Promise<BloggerType> {
-        await this.bloggersCollection.insertOne({...newBlogger})
+        await this.bloggersCollection.create({...newBlogger})
+        // const createBlogger = await this.bloggersCollection.create({...newBlogger})
+        // createBlogger.save()
         return newBlogger
     }
 
@@ -45,7 +47,7 @@ export class BloggersRepository implements IBloggersRepository {
         }
     }
 
-    async getTotalCount(filter: Filter<BloggerType>): Promise<number> {
+    async getTotalCount(filter: FilterQuery<BloggerType>): Promise<number> {
         return this.bloggersCollection.countDocuments(filter)
     }
 }

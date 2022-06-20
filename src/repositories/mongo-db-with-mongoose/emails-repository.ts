@@ -1,8 +1,7 @@
-import {inject, injectable} from "inversify";
+import { injectable} from "inversify";
 import * as MongoClient from "mongodb";
-import {EmailType} from "../types/emails";
-import {IEmailsRepository} from "../domain/users-service";
-import {TYPES} from "../types/ioc";
+import {IEmailsRepository} from "../../domain/users-service";
+import {EmailType} from "../../types/emails";
 
 @injectable()
 export class EmailsRepository implements IEmailsRepository {
