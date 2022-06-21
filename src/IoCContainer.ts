@@ -120,9 +120,12 @@ const testingRepository = new TestingRepository(ConnectionsLimitModel, BlockedCo
 
 
 const invContainer = new Container()
-invContainer.bind<IUsersRepository>(TYPES.IUsersRepository).toConstantValue(usersRepository)
+
+invContainer.bind(TYPES.UsersModel).toConstantValue(UsersModel)
+invContainer.bind<IUsersRepository>(TYPES.IUsersRepository).to(UsersRepository)
 invContainer.bind<IUsersService>(TYPES.IUsersService).to(UsersService)
-invContainer.bind<UsersController>(TYPES.UsersController).to(UsersController)
+// invContainer.bind(UsersController).to(UsersController) === invContainer.bind(UsersController).toSelf()
+invContainer.bind(UsersController).toSelf()
 
 invContainer.bind<IPostsRepository>(TYPES.IPostsRepository).toConstantValue(postsRepository)
 invContainer.bind<IPostsService>(TYPES.IPostsService).to(PostsService)

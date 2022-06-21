@@ -1,13 +1,15 @@
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {IUsersRepository} from "../../domain/users-service";
 import {IAuthRepository} from "../../domain/auth-service";
 import {UserAccountDBType, UserAccountType, UserIdAndLoginType} from "../../types/user";
 import * as mongoose from "mongoose";
 import {FilterQuery} from "mongoose";
+import {UsersModel} from "./models";
+import {TYPES} from "../../types/ioc";
 
 @injectable()
 export class UsersRepository implements IUsersRepository, IAuthRepository {
-    constructor(private usersCollection: mongoose.Model<UserAccountDBType>) {
+    constructor(@inject(TYPES.UsersModel) private usersCollection: mongoose.Model<UserAccountDBType>) {
     }
 
     async getOneUserForJWT(login: string): Promise<UserAccountType | null> {

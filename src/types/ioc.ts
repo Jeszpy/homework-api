@@ -3,6 +3,7 @@ import {HtmlTemplateService} from "../application/html-template-service";
 import {SmtpAdapter} from "../application/smtp-adapter";
 
 export const TYPES = {
+    UsersModel: Symbol.for('UsersModel'),
     IUsersRepository: Symbol.for('IUsersRepository'),
     IUsersService: Symbol.for('IUsersService'),
     UsersController: Symbol.for('UsersController'),
