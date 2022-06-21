@@ -13,6 +13,7 @@ export class BloggersRepository implements IBloggersRepository {
         const bloggers: BloggerType[] = await this.bloggersCollection.find(filter, {_id: false, __v: false})
             .skip((pageNumber-1) * pageSize)
             .limit(pageSize)
+            .lean()
         return bloggers
     }
 
@@ -22,7 +23,7 @@ export class BloggersRepository implements IBloggersRepository {
     }
 
     async getOneBloggerById(id: string): Promise<BloggerType | null> {
-        return this.bloggersCollection.findOne({id},  {_id: false, __v: false})
+        return this.bloggersCollection.findOne({id},  {_id: false, __v: false}).lean()
     }
 
     async updateOneBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
