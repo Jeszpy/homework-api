@@ -118,7 +118,6 @@ const testingRepository = new TestingRepository(ConnectionsLimitModel, BlockedCo
 // paginationMiddleware
 // }
 
-
 const invContainer = new Container()
 
 invContainer.bind(TYPES.UsersModel).toConstantValue(UsersModel)

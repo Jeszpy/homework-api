@@ -17,6 +17,8 @@ export class BloggersRepository implements IBloggersRepository {
         return bloggers
     }
 
+
+
     async createNewBlogger(newBlogger: BloggerType): Promise<BloggerType> {
         await this.bloggersCollection.create({...newBlogger})
         return newBlogger
