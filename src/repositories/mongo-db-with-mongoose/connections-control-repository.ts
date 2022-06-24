@@ -1,10 +1,13 @@
 import {BlockedConnectionType, ConnectionLimitsType} from "../../types/connectionLimits";
 import {IConnectionsControlRepository} from "../../middlewaries/auth/check-connection-limits-middleware";
 import * as mongoose from "mongoose";
+import {inject, injectable} from "inversify";
+import {TYPES} from "../../types/ioc";
 
-
+@injectable()
 export class ConnectionsControlRepository implements IConnectionsControlRepository {
-    constructor(private connectionLimitsCollection: mongoose.Model<ConnectionLimitsType>, private blockedConnectionsCollection: mongoose.Model<BlockedConnectionType>) {
+    constructor(@inject(TYPES.ConnectionsLimitModel) private connectionLimitsCollection: mongoose.Model<ConnectionLimitsType>,
+                @inject(TYPES.BlockedConnectionsModel) private blockedConnectionsCollection: mongoose.Model<BlockedConnectionType>) {
     }
 
     async checkBlockedStatus(ip: string, action: string, connectionDate: Date, blockedInterval: number): Promise<boolean> {

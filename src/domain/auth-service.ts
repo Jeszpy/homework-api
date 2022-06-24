@@ -45,7 +45,6 @@ export class AuthService implements IAuthService {
         return await this.usersRepository.findOneUserByLogin(login)
     }
 
-
     async registrationEmailResending(email: string): Promise<boolean> {
         const user = await this.usersRepository.getOneUserByEmail(email)
         if (user!.emailConfirmation.isConfirmed) {

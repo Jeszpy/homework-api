@@ -1,5 +1,4 @@
 import {settings} from "./settings";
-// import {runDb} from "./repositories/mongo-db/mongo-db";
 import express from 'express'
 import cors from "cors";
 import {bloggersRouter} from "./routes/bloggers-router";

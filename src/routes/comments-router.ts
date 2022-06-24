@@ -11,7 +11,7 @@ export const commentsRouter = Router({})
 const jwtAuthMiddlewareIoC = ioc.get<JWTAuthMiddleware>(TYPES.JWTAuthMiddleware)
 const jwtAuthMiddleware = jwtAuthMiddlewareIoC.use.bind(jwtAuthMiddlewareIoC)
 
-const commentsController = ioc.get<CommentsController>(TYPES.CommentsController)
+const commentsController = ioc.get<CommentsController>(CommentsController)
 const getCommentById = commentsController.getCommentById.bind(commentsController)
 const updateCommentById = commentsController.updateCommentById.bind(commentsController)
 const deleteCommentById = commentsController.deleteCommentById.bind(commentsController)

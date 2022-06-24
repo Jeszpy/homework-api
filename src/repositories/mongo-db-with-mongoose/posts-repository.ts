@@ -1,15 +1,13 @@
-import * as MongoClient from "mongodb";
-import {Filter} from "mongodb";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {IPostsRepository} from "../../domain/posts-service";
 import {PostType} from "../../types/posts";
 import {FilterQuery} from "mongoose";
 import * as mongoose from "mongoose";
+import {TYPES} from "../../types/ioc";
 
 @injectable()
 export class PostsRepository implements IPostsRepository {
-
-    constructor(private postsCollection: mongoose.Model<PostType>) {
+    constructor(@inject(TYPES.PostsModel) private postsCollection: mongoose.Model<PostType>) {
     }
 
     async getAllPosts(searchNameTerm: FilterQuery<PostType>, pageNumber: number, pageSize: number): Promise<PostType[]> {

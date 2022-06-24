@@ -8,7 +8,9 @@ import {UserAccountDBType} from "../types/user";
 
 @injectable()
 export class AuthController {
-    constructor(@inject(TYPES.JWTService) private jwtService: JWTService, @inject(TYPES.IUsersService) private usersService: IUsersService, @inject(TYPES.IAuthService) private authService: IAuthService) {
+    constructor(@inject(TYPES.JWTService) private jwtService: JWTService,
+                @inject(TYPES.IUsersService) private usersService: IUsersService,
+                @inject(TYPES.IAuthService) private authService: IAuthService) {
     }
 
     private registrationEmailResendingErrorMessage = () => {

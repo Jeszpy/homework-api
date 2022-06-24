@@ -22,7 +22,8 @@ const paginationMiddlewareIoC = ioc.get<PaginationMiddleware>(TYPES.PaginationMi
 const paginationMiddleware = paginationMiddlewareIoC.use.bind(paginationMiddlewareIoC)
 
 
-const postsController = ioc.get<PostsController>(TYPES.PostsController)
+const postsController = ioc.get<PostsController>(PostsController)
+
 const getAllPosts = postsController.getAllPosts.bind(postsController)
 const createNewPost = postsController.createNewPost.bind(postsController)
 const getOnePostById = postsController.getOnePostById.bind(postsController)

@@ -1,13 +1,14 @@
 import {Filter} from "mongodb";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {ICommentsRepository} from "../../domain/comments-service";
 import {CommentsType, CommentsWithoutPostIdType} from "../../types/comments";
 import * as mongoose from "mongoose";
 import {FilterQuery} from "mongoose";
+import {TYPES} from "../../types/ioc";
 
 @injectable()
 export class CommentsRepository implements ICommentsRepository {
-    constructor(private commentsCollection: mongoose.Model<CommentsType>) {
+    constructor(@inject(TYPES.CommentsModel) private commentsCollection: mongoose.Model<CommentsType>) {
     }
 
     async getOneCommentById(commentId: string): Promise<CommentsWithoutPostIdType | null> {

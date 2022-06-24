@@ -1,12 +1,13 @@
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {IBloggersRepository} from "../../domain/bloggers-service";
 import {BloggerType} from "../../types/bloggers";
 import * as mongoose from "mongoose";
 import {FilterQuery} from "mongoose";
+import {TYPES} from "../../types/ioc";
 
 @injectable()
 export class BloggersRepository implements IBloggersRepository {
-    constructor(private bloggersCollection: mongoose.Model<BloggerType>) {
+    constructor(@inject(TYPES.BloggersModel) private bloggersCollection: mongoose.Model<BloggerType>) {
     }
 
     async getAllBloggers(filter: FilterQuery<BloggerType>, pageNumber: number, pageSize: number): Promise<BloggerType[]> {

@@ -17,7 +17,7 @@ const basicAuthMiddleware = basicAuthMiddlewareIoC.use.bind(basicAuthMiddlewareI
 const paginationMiddlewareIoC = ioc.get<PaginationMiddleware>(TYPES.PaginationMiddleware)
 const paginationMiddleware = paginationMiddlewareIoC.use.bind(paginationMiddlewareIoC)
 
-// TODO: !
+
 const usersController = ioc.get<UsersController>(UsersController)
 const getAllUsers = usersController.getAllUsers.bind(usersController)
 const createUser = usersController.createUser.bind(usersController)

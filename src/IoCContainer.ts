@@ -1,7 +1,6 @@
 import {Container} from "inversify";
 import "reflect-metadata";
 import {IPostsRepository, PostsService} from "./domain/posts-service";
-import {IPostsService, PostsController} from "./presentation/PostsController";
 import {CommentsService, ICommentsRepository} from "./domain/comments-service";
 import {CommentsController, ICommentsService} from "./presentation/CommentsController";
 import {BloggersService, IBloggersRepository} from "./domain/bloggers-service";
@@ -40,6 +39,7 @@ import {ConnectionsControlRepository} from "./repositories/mongo-db-with-mongoos
 import {EmailsRepository} from "./repositories/mongo-db-with-mongoose/emails-repository";
 import {JwtRepository} from "./repositories/mongo-db-with-mongoose/jwt-repository";
 import {TestingRepository} from "./repositories/mongo-db-with-mongoose/testing-repository";
+import {IPostsService, PostsController} from "./presentation/PostsController";
 
 
 // Old imports for native mongoose
@@ -120,43 +120,49 @@ const testingRepository = new TestingRepository(ConnectionsLimitModel, BlockedCo
 
 const invContainer = new Container()
 
+
 invContainer.bind(TYPES.UsersModel).toConstantValue(UsersModel)
 invContainer.bind<IUsersRepository>(TYPES.IUsersRepository).to(UsersRepository)
 invContainer.bind<IUsersService>(TYPES.IUsersService).to(UsersService)
-// invContainer.bind(UsersController).to(UsersController) === invContainer.bind(UsersController).toSelf()
 invContainer.bind(UsersController).toSelf()
 
-invContainer.bind<IPostsRepository>(TYPES.IPostsRepository).toConstantValue(postsRepository)
+invContainer.bind(TYPES.PostsModel).toConstantValue(PostsModel)
+invContainer.bind<IPostsRepository>(TYPES.IPostsRepository).to(PostsRepository)
 invContainer.bind<IPostsService>(TYPES.IPostsService).to(PostsService)
-invContainer.bind<PostsController>(TYPES.PostsController).to(PostsController)
+invContainer.bind(PostsController).toSelf()
 
-invContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).toConstantValue(bloggersRepository)
+invContainer.bind(TYPES.BloggersModel).toConstantValue(BloggersModel)
+invContainer.bind<IBloggersRepository>(TYPES.IBloggersRepository).to(BloggersRepository)
 invContainer.bind<IBloggersService>(TYPES.IBloggersService).to(BloggersService)
-invContainer.bind<BloggersController>(TYPES.BloggersController).to(BloggersController)
+invContainer.bind(BloggersController).toSelf()
 
-invContainer.bind<ICommentsRepository>(TYPES.ICommentsRepository).toConstantValue(commentsRepository)
+invContainer.bind(TYPES.CommentsModel).toConstantValue(CommentsModel)
+invContainer.bind<ICommentsRepository>(TYPES.ICommentsRepository).to(CommentsRepository)
 invContainer.bind<ICommentsService>(TYPES.ICommentsService).to(CommentsService)
-invContainer.bind<CommentsController>(TYPES.CommentsController).to(CommentsController)
+invContainer.bind(CommentsController).toSelf()
 
-invContainer.bind<IAuthRepository>(TYPES.IAuthRepository).toConstantValue(usersRepository)
+invContainer.bind<IAuthRepository>(TYPES.IAuthRepository).to(UsersRepository)
 invContainer.bind<IAuthService>(TYPES.IAuthService).to(AuthService)
-invContainer.bind<AuthController>(TYPES.AuthController).to(AuthController)
+invContainer.bind(AuthController).toSelf()
 
-
-invContainer.bind<IJwtRepository>(TYPES.IJwtRepository).toConstantValue(jwtRepository)
+invContainer.bind(TYPES.JwtModel).toConstantValue(JwtModel)
+invContainer.bind<IJwtRepository>(TYPES.IJwtRepository).to(JwtRepository)
 invContainer.bind<JWTService>(TYPES.JWTService).to(JWTService)
 
 invContainer.bind<JWTAuthMiddleware>(TYPES.JWTAuthMiddleware).to(JWTAuthMiddleware)
 invContainer.bind<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware).to(BasicAuthMiddleware)
 invContainer.bind<PaginationMiddleware>(TYPES.PaginationMiddleware).to(PaginationMiddleware)
-invContainer.bind<CheckConnectionLimitsMiddleware>(TYPES.CheckConnectionLimitsMiddleware).to(CheckConnectionLimitsMiddleware)
 
-invContainer.bind<IConnectionsControlRepository>(TYPES.IConnectionsControlRepository).toConstantValue(connectionsControlRepository)
+invContainer.bind(TYPES.ConnectionsLimitModel).toConstantValue(ConnectionsLimitModel)
+invContainer.bind(TYPES.BlockedConnectionsModel).toConstantValue(BlockedConnectionsModel)
+invContainer.bind<IConnectionsControlRepository>(TYPES.IConnectionsControlRepository).to(ConnectionsControlRepository)
+invContainer.bind<CheckConnectionLimitsMiddleware>(CheckConnectionLimitsMiddleware).toSelf()
 
-invContainer.bind<IEmailsRepository>(TYPES.IEmailsRepository).toConstantValue(emailsRepository)
+invContainer.bind(TYPES.EmailsModel).toConstantValue(EmailsModel)
+invContainer.bind<IEmailsRepository>(TYPES.IEmailsRepository).to(EmailsRepository)
 invContainer.bind<EmailNotificationService>(TYPES.EmailNotificationService).to(EmailNotificationService)
 
-invContainer.bind<ITestingRepository>(TYPES.ITestingRepository).toConstantValue(testingRepository)
+invContainer.bind<ITestingRepository>(TYPES.ITestingRepository).to(TestingRepository)
 invContainer.bind<ITestingService>(TYPES.ITestingService).to(TestingService)
 invContainer.bind<TestingController>(TYPES.TestingController).to(TestingController)
 

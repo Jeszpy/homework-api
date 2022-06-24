@@ -20,7 +20,8 @@ const basicAuthMiddleware = basicAuthMiddlewareIoC.use.bind(basicAuthMiddlewareI
 const paginationMiddlewareIoC = ioc.get<PaginationMiddleware>(TYPES.PaginationMiddleware)
 const paginationMiddleware = paginationMiddlewareIoC.use.bind(paginationMiddlewareIoC)
 
-const bloggersControllerIoC = ioc.get<BloggersController>(TYPES.BloggersController)
+const bloggersControllerIoC = ioc.get<BloggersController>(BloggersController)
+
 const getAllBloggers = bloggersControllerIoC.getAllBloggers.bind(bloggersControllerIoC)
 const createBlogger = bloggersControllerIoC.createBlogger.bind(bloggersControllerIoC)
 const getBloggerById = bloggersControllerIoC.getBloggerById.bind(bloggersControllerIoC)

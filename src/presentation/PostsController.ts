@@ -41,9 +41,6 @@ export class PostsController {
 
     async updateOnePostById(req: Request, res: Response) {
         const id = req.params.id
-        // if (!id) {
-        //     return res.sendStatus(404)
-        // }
         const {title, shortDescription, content, bloggerId} = req.body
         const post = await this.postsService.getOnePostById(id)
         if (!post) {

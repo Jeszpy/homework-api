@@ -4,7 +4,6 @@ import {IAuthRepository} from "../../domain/auth-service";
 import {UserAccountDBType, UserAccountType, UserIdAndLoginType} from "../../types/user";
 import * as mongoose from "mongoose";
 import {FilterQuery} from "mongoose";
-import {UsersModel} from "./models";
 import {TYPES} from "../../types/ioc";
 
 @injectable()

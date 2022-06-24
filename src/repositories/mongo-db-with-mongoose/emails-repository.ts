@@ -1,11 +1,12 @@
-import { injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {IEmailsRepository} from "../../domain/users-service";
 import {EmailType} from "../../types/emails";
 import * as mongoose from "mongoose";
+import {TYPES} from "../../types/ioc";
 
 @injectable()
 export class EmailsRepository implements IEmailsRepository {
-    constructor(private emailsCollection: mongoose.Model<EmailType>) {
+    constructor(@inject(TYPES.EmailsModel) private emailsCollection: mongoose.Model<EmailType>) {
     }
 
     async insertEmailToQueue(emailInfo: EmailType): Promise<boolean> {
