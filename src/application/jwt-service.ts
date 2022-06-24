@@ -4,7 +4,7 @@ import {settings} from "../settings";
 import {IUsersRepository} from "../domain/users-service";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
-import {AccessAndRefreshTokenType, JwtType} from "../types/jwt";
+import {AccessAndRefreshTokenType, RefreshTokenType} from "../types/jwt";
 
 @injectable()
 export class JWTService {
@@ -42,11 +42,30 @@ export class JWTService {
 
     }
 
-    // async
+    // async blockOldRefreshToken (refreshToken: string): Promise<boolean>{
+    //
+    // }
 
+    async getNewRefreshToken(refreshToken: string): Promise<string | null> {
+        const token = await this.jwtRepository.getRefreshToken(refreshToken)
+        console.log(refreshToken, token)
+        if (!token) return null
+        if (token.blocked) return null
+        const id = jwt.decode(token.refreshToken)
+        console.log(id)
+        // const userId =
+        // await
+        // const refreshToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
+        return null
+    }
 }
 
 export interface IJwtRepository {
 
     saveRefreshToken(refreshToken: string): Promise<void>
+
+    getRefreshToken(refreshToken: string): Promise<RefreshTokenType | null>
+
+    blockOldRefreshToken(refreshToken: string): Promise<boolean>
+
 }

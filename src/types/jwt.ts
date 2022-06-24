@@ -1,7 +1,5 @@
-export type JwtType = {
-    // userId: string,
+export type RefreshTokenType = {
     refreshToken: string,
-    // expiresAt: Date,
     blocked: boolean
 }
 

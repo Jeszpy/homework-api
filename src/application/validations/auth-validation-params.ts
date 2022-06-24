@@ -30,6 +30,13 @@ const codeValidation = body('code')
     .notEmpty()
     .withMessage('field must not be empty')
 
+const accessTokenValidation = body('accessToken')
+    .isString()
+    .withMessage('input value must be a string')
+    .trim()
+    .notEmpty()
+    .withMessage('field must not be empty')
+
 
 export const authConfirmEmailValidationParams = [
     codeValidation,
@@ -52,6 +59,11 @@ export const authLoginValidationParams = [
 
 export const authRegistrationEmailResendingValidationParams = [
     emailValidation,
+    inputValidatorMiddleware
+]
+
+export const authAccessTokenValidationParams = [
+    accessTokenValidation,
     inputValidatorMiddleware
 ]
 

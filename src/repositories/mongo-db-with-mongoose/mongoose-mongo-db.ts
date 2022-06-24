@@ -5,7 +5,7 @@ const mongoUri = settings.mongoUri
 
 export async function runDb() {
     try {
-        await mongoose.connect(mongoUri);
+        await mongoose.connect(mongoUri, {dbName: 'homework-api'});
         console.log("Connected successfully to mongo server by mongoose");
     } catch (e) {
         await mongoose.disconnect()

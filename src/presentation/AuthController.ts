@@ -78,13 +78,6 @@ export class AuthController {
         return isResend ? res.sendStatus(204) : res.status(400).send(this.registrationCodeConfirmErrorMessage())
     }
 
-
-    async login(req: Request, res: Response) {
-        const {login, password} = req.body
-        const token = await this.jwtService.createJWT(login, password)
-        return token ? res.send({token}) : res.sendStatus(401)
-    }
-
     async registration(req: Request, res: Response) {
         const {login, email, password} = req.body
         const emailInDB = await this.authService.findOneUserByEmail(email)
@@ -111,6 +104,29 @@ export class AuthController {
         }
         const confirm = await this.authService.confirmEmail(code)
         return confirm ? res.sendStatus(204) : res.sendStatus(400)
+    }
+
+    async login(req: Request, res: Response) {
+        const {login, password} = req.body
+        const tokens = await this.jwtService.createJWT(login, password)
+        if (!tokens) {
+            return res.sendStatus(401)
+        }
+        res.cookie('refreshToken', tokens.refreshToken, {httpOnly: true, secure: true})
+        return res.send({accessToken: tokens.accessToken})
+    }
+
+    async refreshToken(req: Request, res: Response) {
+        try {
+            const refreshToken = req.cookies.refreshToken
+            if (!refreshToken) {
+                return res.sendStatus(401)
+            }
+            const newRefreshToken = await this.jwtService.getNewRefreshToken(refreshToken)
+            return res.send('')
+        } catch (e) {
+            console.error(e)
+        }
     }
 }
 

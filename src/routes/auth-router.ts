@@ -3,6 +3,7 @@ import {ioc} from "../IoCContainer";
 import {AuthController} from "../presentation/AuthController";
 import {CheckConnectionLimitsMiddleware} from "../middlewaries/auth/check-connection-limits-middleware";
 import {
+    authAccessTokenValidationParams,
     authConfirmEmailValidationParams,
     authLoginValidationParams, authRegistrationEmailResendingValidationParams,
     authRegistrationValidationParams
@@ -21,6 +22,7 @@ const registrationEmailResending = authControllerIoC.registrationEmailResending.
 const registration = authControllerIoC.registration.bind(authControllerIoC)
 const confirmEmail = authControllerIoC.confirmEmail.bind(authControllerIoC)
 const login = authControllerIoC.login.bind(authControllerIoC)
+const refreshToken = authControllerIoC.refreshToken.bind(authControllerIoC)
 
 
 authRouter.use(checkConnectionLimitsMiddleware)
@@ -29,3 +31,4 @@ authRouter.post('/registration-email-resending', authRegistrationEmailResendingV
 authRouter.post('/registration', authRegistrationValidationParams, registration)
 authRouter.post('/registration-confirmation', authConfirmEmailValidationParams, confirmEmail)
 authRouter.post('/login', authLoginValidationParams, login)
+authRouter.post('/refresh-token', authAccessTokenValidationParams, refreshToken)
