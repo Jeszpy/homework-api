@@ -10,17 +10,15 @@ export class JwtRepository implements IJwtRepository {
     }
 
     async saveRefreshToken(refreshToken: string): Promise<void> {
-        const a = await this.jwtCollection.create({refreshToken}, {})
-        console.log(a)
+        await this.jwtCollection.create({refreshToken})
     }
 
     async getRefreshToken(refreshToken: string): Promise<RefreshTokenType | null>{
-        const a = await this.jwtCollection.findOne({refreshToken})
-        return a
+        return this.jwtCollection.findOne({refreshToken: refreshToken})
     }
 
-    async blockOldRefreshToken(refreshToken: string): Promise<boolean>{
-        const block =  this.jwtCollection.updateOne({refreshToken}, {$set: {blocked: true}})
-        return false
+    async blockOldRefreshToken(oldRefreshToken: string): Promise<boolean>{
+        const block =  await this.jwtCollection.updateOne({refreshToken: oldRefreshToken}, {$set: {blocked: true}})
+        return block.modifiedCount === 1
     }
 }

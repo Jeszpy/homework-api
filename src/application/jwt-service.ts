@@ -22,8 +22,6 @@ export class JWTService {
                 const accessToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: settings.ACCESS_TOKEN_EXPIRES_IN})
                 const refreshToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
                 await this.jwtRepository.saveRefreshToken(refreshToken)
-                // TODO: 1: создать эндпоинт для получения аксэс токена.
-                //  2: присылает рефреш -> проверяем рефреш -> генерируем новый аксесс и рефреш -> ,локаем тот рефреш токен который прислали -> отсылаем новый акссес и рефреш
                 return {accessToken, refreshToken}
             }
         } catch (e) {
@@ -42,21 +40,24 @@ export class JWTService {
 
     }
 
-    // async blockOldRefreshToken (refreshToken: string): Promise<boolean>{
-    //
-    // }
-
-    async getNewRefreshToken(refreshToken: string): Promise<string | null> {
-        const token = await this.jwtRepository.getRefreshToken(refreshToken)
-        console.log(refreshToken, token)
+    async blockOldRefreshToken (oldRefreshToken: string): Promise<boolean | null>{
+        const token = await this.jwtRepository.getRefreshToken(oldRefreshToken)
         if (!token) return null
         if (token.blocked) return null
-        const id = jwt.decode(token.refreshToken)
-        console.log(id)
-        // const userId =
-        // await
-        // const refreshToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
-        return null
+        return this.jwtRepository.blockOldRefreshToken(oldRefreshToken)
+    }
+
+    async getNewRefreshToken(refreshToken: string): Promise<AccessAndRefreshTokenType | null> {
+        const token = await this.jwtRepository.getRefreshToken(refreshToken)
+        if (!token) return null
+        if (token.blocked) return null
+        await this.jwtRepository.blockOldRefreshToken(token.refreshToken)
+        const userInfo: any = jwt.decode(token.refreshToken)
+        const userId = userInfo.userId
+        const accessToken = jwt.sign({userId}, settings.JWT_SECRET, {expiresIn: settings.ACCESS_TOKEN_EXPIRES_IN})
+        const newRefreshToken = jwt.sign({userId}, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
+        await this.jwtRepository.saveRefreshToken(newRefreshToken)
+        return {accessToken, refreshToken: newRefreshToken}
     }
 }
 

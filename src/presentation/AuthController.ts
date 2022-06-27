@@ -3,7 +3,7 @@ import {Request, Response} from "express";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
 import {IUsersService} from "./UsersController";
-import {UserAccountDBType} from "../types/user";
+import {UserAccountDBType, UserInfoType} from "../types/user";
 
 
 @injectable()
@@ -122,13 +122,42 @@ export class AuthController {
             if (!refreshToken) {
                 return res.sendStatus(401)
             }
-            const newRefreshToken = await this.jwtService.getNewRefreshToken(refreshToken)
-            return res.send('')
+            const newTokens = await this.jwtService.getNewRefreshToken(refreshToken)
+            if (!newTokens) {
+                return res.sendStatus(401)
+            }
+            res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})
+            return res.send({accessToken: newTokens.accessToken})
         } catch (e) {
             console.error(e)
         }
     }
+
+    async logout(req: Request, res: Response){
+        try {
+            const refreshToken = req.cookies.refreshToken
+            if (!refreshToken) {
+                return res.sendStatus(401)
+            }
+            const result = await this.jwtService.blockOldRefreshToken(refreshToken)
+            return result ? res.sendStatus(201) : res.sendStatus(401)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    async me(req: Request, res: Response) {
+        try {
+            const userId = req.user!.id
+            const userInfo = await this.usersService.getUserInfoById(userId)
+            return res.send(userInfo)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
 }
+
 
 export interface IAuthService {
     confirmEmail(code: string): Promise<boolean | null>

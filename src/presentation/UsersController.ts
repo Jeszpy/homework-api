@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {PaginationResultType} from "../application/pagination";
-import {UserIdAndLoginType} from "../types/user";
+import {UserIdAndLoginType, UserInfoType} from "../types/user";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types/ioc";
 
@@ -36,4 +36,7 @@ export interface IUsersService {
     deleteUserById(id: string): Promise<boolean>,
 
     getOneUserById(userId: string): Promise<UserIdAndLoginType | null>
+
+    getUserInfoById(userId: string): Promise<UserInfoType | null>
+
 }

@@ -8,6 +8,7 @@ import {PaginationMiddleware} from "../middlewaries/pagination-middleware";
 import {BasicAuthMiddleware} from "../middlewaries/auth/basic-auth-middleware";
 import {JWTAuthMiddleware} from "../middlewaries/auth/jwt-auth-middleware";
 import {TYPES} from "../types/ioc";
+import {UsersController} from "../presentation/UsersController";
 
 export const postsRouter = Router({})
 

@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
 import {pagination, PaginationResultType} from "../application/pagination";
 import * as argon2 from "argon2";
-import {UserAccountDBType, UserAccountType, UserIdAndLoginType} from "../types/user";
+import {UserAccountDBType, UserAccountType, UserIdAndLoginType, UserInfoType} from "../types/user";
 import {Filter, ObjectId, WithoutId} from "mongodb";
 import {IUsersService} from "../presentation/UsersController";
 import {inject, injectable} from "inversify";
@@ -69,6 +69,16 @@ export class UsersService implements IUsersService {
         return await this.usersRepository.deleteUserById(id)
     }
 
+    async getUserInfoById(userId: string): Promise<UserInfoType | null> {
+        const user = await this.usersRepository.getUserInfoById(userId)
+        if (!user) return null
+        return {
+            id: user.accountData.id,
+            login: user.accountData.login,
+            email: user.accountData.email
+        }
+    }
+
 
 }
 
@@ -88,6 +98,8 @@ export interface IUsersRepository {
     findOneUserByLogin(login: string): Promise<boolean>
 
     findOneUserByEmail(email: string): Promise<boolean>
+
+    getUserInfoById(userId: string): Promise<UserAccountDBType | null>
 }
 
 export interface IEmailsRepository {

@@ -5,6 +5,12 @@ export type UserAccountDBType = {
     emailConfirmation: EmailConfirmationType
 }
 
+export type UserInfoType = {
+    id: string,
+    login: string,
+    email: string,
+}
+
 export type UserAccountType = {
     id: string,
     login: string,

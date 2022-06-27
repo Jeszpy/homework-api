@@ -1,7 +1,7 @@
 import {inject, injectable} from "inversify";
 import {IUsersRepository} from "../../domain/users-service";
 import {IAuthRepository} from "../../domain/auth-service";
-import {UserAccountDBType, UserAccountType, UserIdAndLoginType} from "../../types/user";
+import {UserAccountDBType, UserAccountType, UserIdAndLoginType, UserInfoType} from "../../types/user";
 import * as mongoose from "mongoose";
 import {FilterQuery} from "mongoose";
 import {TYPES} from "../../types/ioc";
@@ -88,5 +88,9 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
     async findCodeInDB(code: string): Promise<UserAccountDBType | null> {
         const res = await this.usersCollection.findOne({'emailConfirmation.confirmationCode': code})
         return res ? res : null
+    }
+
+    async getUserInfoById(userId: string): Promise<UserAccountDBType | null> {
+        return this.usersCollection.findOne({"accountData.id": userId})
     }
 }

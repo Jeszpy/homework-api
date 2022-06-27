@@ -68,9 +68,6 @@ export class PostsController {
 
     async deleteOnePostById(req: Request, res: Response) {
         const id = req.params.id
-        // if (!id) {
-        //     return res.sendStatus(404)
-        // }
         const isPostDelete: boolean = await this.postsService.deleteOnePostById(id)
         return isPostDelete ? res.sendStatus(204) : res.sendStatus(404)
     }
