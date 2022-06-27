@@ -31,9 +31,11 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
     }
 
     async getAllUsers(pageNumber: number, pageSize: number): Promise<UserIdAndLoginType[]> {
-        const allUsers = await this.usersCollection.find({}, {
-            _id: false, accountData: {id: true, __v: false, login: true}
-        }).skip((pageNumber - 1) * pageSize).limit(pageSize)
+        const allUsers = await this.usersCollection.find({},
+        //     {
+        //     _id: false, __v: false
+        // }
+        ).skip((pageNumber - 1) * pageSize).limit(pageSize)
         return allUsers.map(u => ({id: u.accountData.id, login: u.accountData.login}))
     }
 
