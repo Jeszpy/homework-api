@@ -41,6 +41,11 @@ export class JWTService {
     }
 
     async blockOldRefreshToken (oldRefreshToken: string): Promise<boolean | null>{
+        try {
+            jwt.verify(oldRefreshToken, settings.JWT_SECRET)
+        } catch (e) {
+            return null
+        }
         const token = await this.jwtRepository.getRefreshToken(oldRefreshToken)
         if (!token) return null
         if (token.blocked) return null
