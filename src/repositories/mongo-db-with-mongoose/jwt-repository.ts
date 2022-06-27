@@ -14,7 +14,7 @@ export class JwtRepository implements IJwtRepository {
     }
 
     async getRefreshToken(refreshToken: string): Promise<RefreshTokenType | null>{
-        return this.jwtCollection.findOne({refreshToken: refreshToken})
+        return this.jwtCollection.findOne({refreshToken})
     }
 
     async blockOldRefreshToken(oldRefreshToken: string): Promise<boolean>{

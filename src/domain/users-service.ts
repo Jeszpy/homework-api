@@ -73,7 +73,7 @@ export class UsersService implements IUsersService {
         const user = await this.usersRepository.getUserInfoById(userId)
         if (!user) return null
         return {
-            id: user.accountData.id,
+            userId: user.accountData.id,
             login: user.accountData.login,
             email: user.accountData.email
         }

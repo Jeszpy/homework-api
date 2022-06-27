@@ -6,7 +6,7 @@ export type UserAccountDBType = {
 }
 
 export type UserInfoType = {
-    id: string,
+    userId: string,
     login: string,
     email: string,
 }

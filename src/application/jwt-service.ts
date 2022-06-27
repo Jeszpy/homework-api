@@ -51,6 +51,11 @@ export class JWTService {
         const token = await this.jwtRepository.getRefreshToken(refreshToken)
         if (!token) return null
         if (token.blocked) return null
+        try {
+            jwt.verify(token.refreshToken, settings.JWT_SECRET)
+        } catch (e) {
+            return null
+        }
         await this.jwtRepository.blockOldRefreshToken(token.refreshToken)
         const userInfo: any = jwt.decode(token.refreshToken)
         const userId = userInfo.userId

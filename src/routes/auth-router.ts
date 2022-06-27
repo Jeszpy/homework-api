@@ -38,6 +38,6 @@ authRouter.post('/registration-email-resending', authRegistrationEmailResendingV
 authRouter.post('/registration', authRegistrationValidationParams, registration)
 authRouter.post('/registration-confirmation', authConfirmEmailValidationParams, confirmEmail)
 authRouter.post('/login', authLoginValidationParams, login)
-authRouter.post('/refresh-token', authAccessTokenValidationParams, refreshToken)
+authRouter.post('/refresh-token', refreshToken)
 authRouter.post('/logout', logout)
 authRouter.get('/me', jwtAuthMiddleware, me)
