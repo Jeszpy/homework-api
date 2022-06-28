@@ -38,3 +38,5 @@ const startApp = (async () => {
 })
 
 startApp()
+
+export default app
