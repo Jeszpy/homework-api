@@ -63,7 +63,7 @@ export class JWTService {
         }
         await this.jwtRepository.blockOldRefreshToken(token.refreshToken)
         const userInfo: any = jwt.decode(token.refreshToken)
-        const userId = userInfo.userId
+        const userId: string = userInfo.userId
         const accessToken = jwt.sign({userId}, settings.JWT_SECRET, {expiresIn: settings.ACCESS_TOKEN_EXPIRES_IN})
         const newRefreshToken = jwt.sign({userId}, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
         console.log(`Old refreshToken: ${token.refreshToken}`)
