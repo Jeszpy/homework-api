@@ -140,7 +140,7 @@ export class AuthController {
                 return res.sendStatus(401)
             }
             const result = await this.jwtService.blockOldRefreshToken(refreshToken)
-            return result ? res.sendStatus(201) : res.sendStatus(401)
+            return result ? res.sendStatus(204) : res.sendStatus(401)
         } catch (e) {
             console.error(e)
         }
