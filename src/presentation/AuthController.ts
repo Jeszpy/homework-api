@@ -126,9 +126,6 @@ export class AuthController {
             if (!newTokens) {
                 return res.sendStatus(401)
             }
-            console.log(`Old refreshToken: ${refreshToken}`)
-            console.log(`New refreshToken: ${newTokens.refreshToken}`)
-            console.log(refreshToken === newTokens.refreshToken)
             res.cookie('refreshToken', newTokens.refreshToken, {httpOnly: true, secure: true})
             return res.send({accessToken: newTokens.accessToken})
         } catch (e) {
