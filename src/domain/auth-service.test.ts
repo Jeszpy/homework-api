@@ -3,53 +3,37 @@ import {UsersRepository} from "../repositories/mongo-db-with-mongoose/users-repo
 import {EmailsModel, UsersModel} from "../repositories/mongo-db-with-mongoose/models";
 import {ioc} from "../IoCContainer";
 import {TYPES} from "../types/ioc";
+import {UsersService} from "./users-service";
+import {MongoMemoryServer} from "mongodb-memory-server";
 
-describe('all tests for AuthService', () => {
+describe('integration tests for AuthService', () => {
 
-    // describe('unit test', () => {
-    //
-    //     describe('isCodeConfirmed', () => {
-    //
-    //         it('should return false', async () => {
-    //                 const usersRepository = {
-    //                     getUserByConfirmationCode: () => null
-    //                 }
-    //                 const authService = new AuthService(usersRepository as any, {} as IEmailsRepository)
-    //                 const response = await authService.isCodeConfirmed('stringWithCode')
-    //                 expect(response).toBeFalsy()
-    //             }
-    //         )
-    //
-    //         it('should return true', async () => {
-    //                 const usersRepository = {
-    //                     getUserByConfirmationCode: () => ({emailConfirmation: {isConfirmed: true}})
-    //                 }
-    //                 const authService = new AuthService(usersRepository as any, {} as IEmailsRepository)
-    //                 const response = await authService.isCodeConfirmed('stringWithCode')
-    //                 expect(response).toBeTruthy()
-    //             }
-    //         )
-    //
-    //     })
-    // })
 
-    describe('integration test', () => {
-        ioc.rebind(TYPES.UsersModel).toConstantValue(new UsersModel());
-        const usersModel: any = ioc.get(TYPES.UsersModel)
-        const usersRepository: any = new UsersRepository(usersModel)
 
-        ioc.rebind(TYPES.EmailsModel).toConstantValue(new EmailsModel());
-        const emailsModel: any = ioc.get(TYPES.EmailsModel)
-        const emailsRepository: any = new UsersRepository(usersModel)
-        const authService = new AuthService(usersRepository, emailsRepository)
+    describe('createUser', () => {
 
-        describe('createUser', () => {
+        let mongoServer: MongoMemoryServer
 
-            it('should return', async () => {
-
-                expect(5).toBe(5)
-            })
+        beforeAll(async () => {
+            mongoServer = await MongoMemoryServer.create()
         })
+
+        // const m
+
+        const authService = ioc.get<AuthService>(TYPES.IAuthService)
+        const usersService = ioc.get<UsersService>(TYPES.IUsersService)
+
+        const login = 'validLogin'
+        const email = 'hleb.lukashonak@yandex.ru'
+        const password = 'validPassword'
+
+        it('should return', async () => {
+
+            const newUser = await usersService.createUser(login, email, password)
+
+            expect(newUser!.login).toBe(login)
+        })
+
     })
 })
 
