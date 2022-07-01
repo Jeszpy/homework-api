@@ -11,6 +11,17 @@ export class JWTService {
     constructor(@inject(TYPES.IUsersRepository) private usersRepository: IUsersRepository, @inject(TYPES.IJwtRepository) private jwtRepository: IJwtRepository) {
     }
 
+    async verifyJwt(token: RefreshTokenType | null): Promise<string | null>{
+        if (!token) return null
+        if (token.blocked) return null
+        try {
+            jwt.verify(token.refreshToken, settings.JWT_SECRET)
+        } catch (e) {
+            return null
+        }
+        return token.refreshToken
+    }
+
     async createJWT(login: string, password: string): Promise<AccessAndRefreshTokenType | null> {
         const user = await this.usersRepository.getOneUserForJWT(login)
         if (!user) {
@@ -54,21 +65,16 @@ export class JWTService {
 
     async getNewRefreshToken(refreshToken: string): Promise<AccessAndRefreshTokenType | null> {
         const token = await this.jwtRepository.getRefreshToken(refreshToken)
-        if (!token) return null
-        if (token.blocked) return null
-        try {
-            jwt.verify(token.refreshToken, settings.JWT_SECRET)
-        } catch (e) {
-            return null
-        }
-        await this.jwtRepository.blockOldRefreshToken(token.refreshToken)
-        const userInfo: any = jwt.decode(token.refreshToken)
+        const oldRefreshToken = await this.verifyJwt(token)
+        if (!oldRefreshToken) return null
+        await this.jwtRepository.blockOldRefreshToken(oldRefreshToken)
+        const userInfo: any = jwt.decode(oldRefreshToken)
         const userId: string = userInfo.userId
         const accessToken = jwt.sign({userId}, settings.JWT_SECRET, {expiresIn: settings.ACCESS_TOKEN_EXPIRES_IN})
         const newRefreshToken = jwt.sign({userId}, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
-        console.log(`Old refreshToken: ${token.refreshToken}`)
+        console.log(`Old refreshToken: ${oldRefreshToken}`)
         console.log(`New refreshToken: ${newRefreshToken}`)
-        console.log(`Is it mirror: ${token.refreshToken === newRefreshToken}`)
+        console.log(`Is it mirror: ${oldRefreshToken === newRefreshToken}`)
         await this.jwtRepository.saveRefreshToken(newRefreshToken)
         return {accessToken, refreshToken: newRefreshToken}
     }

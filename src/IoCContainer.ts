@@ -74,15 +74,15 @@ import {IPostsService, PostsController} from "./presentation/PostsController";
 
 
 // Repos mongoDB with mongoose
-const postsRepository = new PostsRepository(PostsModel)
-const commentsRepository = new CommentsRepository(CommentsModel)
-const bloggersRepository = new BloggersRepository(BloggersModel)
-const usersRepository = new UsersRepository(UsersModel)
-const connectionsControlRepository = new ConnectionsControlRepository(ConnectionsLimitModel, BlockedConnectionsModel)
-const emailsRepository = new EmailsRepository(EmailsModel)
-const jwtRepository = new JwtRepository(JwtModel)
-const testingRepository = new TestingRepository(ConnectionsLimitModel, BlockedConnectionsModel,
-    BloggersModel, CommentsModel, EmailsModel, PostsModel, UsersModel)
+// const postsRepository = new PostsRepository(PostsModel)
+// const commentsRepository = new CommentsRepository(CommentsModel)
+// const bloggersRepository = new BloggersRepository(BloggersModel)
+// const usersRepository = new UsersRepository(UsersModel)
+// const connectionsControlRepository = new ConnectionsControlRepository(ConnectionsLimitModel, BlockedConnectionsModel)
+// const emailsRepository = new EmailsRepository(EmailsModel)
+// const jwtRepository = new JwtRepository(JwtModel)
+// const testingRepository = new TestingRepository(ConnectionsLimitModel, BlockedConnectionsModel,
+//     BloggersModel, CommentsModel, EmailsModel, PostsModel, UsersModel)
 
 
 // Services
@@ -148,6 +148,7 @@ invContainer.bind(AuthController).toSelf()
 invContainer.bind(TYPES.JwtModel).toConstantValue(JwtModel)
 invContainer.bind<IJwtRepository>(TYPES.IJwtRepository).to(JwtRepository)
 invContainer.bind<JWTService>(TYPES.JWTService).to(JWTService)
+// invContainer.bind(JWTService).toSelf()
 
 invContainer.bind<JWTAuthMiddleware>(TYPES.JWTAuthMiddleware).to(JWTAuthMiddleware)
 invContainer.bind<BasicAuthMiddleware>(TYPES.BasicAuthMiddleware).to(BasicAuthMiddleware)
