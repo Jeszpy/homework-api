@@ -6,6 +6,8 @@ import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 import {EmailsRepository} from "../repositories/mongo-db-with-mongoose/emails-repository";
 import {JWTService} from "../application/jwt-service";
+import {EmailType} from "../types/emails";
+import {UserIdAndLoginType, UserInfoType} from "../types/user";
 
 describe('integration tests for AuthService', () => {
 
@@ -16,38 +18,31 @@ describe('integration tests for AuthService', () => {
     const emailRepository = ioc.get<EmailsRepository>(TYPES.IEmailsRepository)
     const jwtService = ioc.get<JWTService>(TYPES.JWTService)
 
+    const login = 'validLogin'
+    const email = 'gleb.luk.go@gmail.com'
+    const password = 'validPassword'
+
     beforeAll(async () => {
         // TODO: добавить тестовые данные
         mongoServer = await MongoMemoryServer.create()
         const mongoUri = mongoServer.getUri()
         await mongoose.connect(mongoUri)
-    })
 
-    const login = 'validLogin'
-    const email = 'gleb.luk.go@gmail.com'
-    const password = 'validPassword'
+        const newUser = await usersService.createUser(login, email, password)
+        expect.setState({newUser})
+    })
 
     let accessToken: string
     let refreshToken: string
-    let oldRefreshToken: string
-
-    const createUser = async () => {
-        const newUser = await usersService.createUser(login, email, password)
-        if (!newUser) throw Error
-        return newUser
-    }
-
 
     describe('createUser && getUserInfoById && getEmailForQueue for sending ', () => {
 
         it('createUser and getUserInfoById', async () => {
 
-            // create new user | returns 'id', 'login'
-            const newUser = await createUser()
-            // get new user from db by ID | returns 'UserIdAndLoginType'
+            const newUser = expect.getState().newUser
+            expect(newUser).not.toBeUndefined()
             const userId = newUser.id
-            const createdUser = await usersService.getUserInfoById(userId)
-            if (!createdUser) throw Error
+            const createdUser = await usersService.getUserInfoById(userId) as UserInfoType
 
             expect(createdUser.login).toBe(login)
             expect(createdUser.email).toBe(email)
@@ -55,11 +50,9 @@ describe('integration tests for AuthService', () => {
         })
 
 
-        // TODO: дописать инсэрт емэйла
         it('getEmailForQueue', async () => {
 
-            const emailInQueue = await emailRepository.getEmailFromQueue()
-            if (!emailInQueue) throw Error
+            const emailInQueue = await emailRepository.getEmailFromQueue() as EmailType
 
             expect(emailInQueue.email).toBe(email)
             expect(emailInQueue.userLogin).toBe(login)
@@ -75,7 +68,7 @@ describe('integration tests for AuthService', () => {
 
 
         it('should return access and refresh tokens', async () => {
-            await createUser()
+
             const tokens = await jwtService.createJWT(login, password)
             if (!tokens) throw Error
             accessToken = tokens.accessToken
@@ -98,7 +91,6 @@ describe('integration tests for AuthService', () => {
 
         it('should return unique tokens', async () => {
 
-            await createUser()
 
             const tokens = await jwtService.createJWT(login, password)
 
@@ -137,8 +129,9 @@ describe('integration tests for AuthService', () => {
     // })
 
 
-    // afterAll(async () => {
-    //     await mongoose.disconnect()
-    // })
+    afterAll(async () => {
+        await mongoose.disconnect()
+        await mongoServer.stop()
+    })
 })
 
