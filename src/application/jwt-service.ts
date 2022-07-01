@@ -13,19 +13,11 @@ export class JWTService {
     }
 
     async verifyJwt(token: RefreshTokenType | null): Promise<string | null>{
-        if (!token) {
-            console.log('!token')
-            return null
-        }
-        if (token.blocked) {
-            console.log('blocked')
-            return null
-        }
-
+        if (!token) return null
+        if (token.blocked) return null
         try {
             jwt.verify(token.refreshToken, settings.JWT_SECRET)
         } catch (e) {
-            console.log('catch e', e)
             return null
         }
         return token.refreshToken
@@ -34,7 +26,6 @@ export class JWTService {
     async createJWT(login: string, password: string): Promise<AccessAndRefreshTokenType | null> {
         const user = await this.usersRepository.getOneUserForJWT(login)
         if (!user) {
-            console.log('no user')
             return null
         }
         try {
@@ -45,10 +36,8 @@ export class JWTService {
                 await this.jwtRepository.saveRefreshToken(refreshToken)
                 return {accessToken, refreshToken}
             }
-            console.log('no verify')
             return null
         } catch (e) {
-            console.log('e', e)
             return null
         }
     }
@@ -88,9 +77,6 @@ export class JWTService {
         }
         const accessToken = jwt.sign(payload, settings.JWT_SECRET, {expiresIn: settings.ACCESS_TOKEN_EXPIRES_IN})
         const newRefreshToken = jwt.sign(payload, settings.JWT_SECRET, {expiresIn: settings.REFRESH_TOKEN_EXPIRES_IN})
-        // console.log(`Old refreshToken: ${oldRefreshToken}`)
-        // console.log(`New refreshToken: ${newRefreshToken}`)
-        // console.log(`Is it mirror: ${oldRefreshToken === newRefreshToken}`)
         await this.jwtRepository.saveRefreshToken(newRefreshToken)
         return {accessToken, refreshToken: newRefreshToken}
     }

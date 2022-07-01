@@ -84,20 +84,11 @@ describe('integration tests for AuthService', () => {
             expect(tokens).not.toBeNull()
 
         });
+        it('should return errors because email and login not unique', async () => {
+            await usersService.createUser(login, email, password)
+            const wrongNewUser = await usersService.createUser(login, email, password)
 
-        it('should return unique tokens', async () => {
-
-            await createUser()
-            const tokens = await jwtService.createJWT(login, password)
-
-            const oldTokens = await jwtService.getNewRefreshToken(tokens!.refreshToken)
-            const newTokens = await jwtService.getNewRefreshToken(oldTokens!.refreshToken)
-
-
-            expect(oldTokens).not.toBeNull()
-            expect(newTokens).not.toBeNull()
-            expect(newTokens!.accessToken).not.toStrictEqual(oldTokens!.accessToken)
-            expect(newTokens!.refreshToken).not.toStrictEqual(oldTokens!.refreshToken)
+            expect(wrongNewUser).toBeNull()
 
         });
 
@@ -105,6 +96,28 @@ describe('integration tests for AuthService', () => {
 
     describe('getNewRefreshToken', () => {
 
+        it('should return unique tokens', async () => {
+
+            await createUser()
+
+            const tokens = await jwtService.createJWT(login, password)
+
+            const oldTokens = await jwtService.getNewRefreshToken(tokens!.refreshToken)
+            const newTokens = await jwtService.getNewRefreshToken(oldTokens!.refreshToken)
+
+            expect(oldTokens).not.toBeNull()
+            expect(newTokens).not.toBeNull()
+            expect(newTokens!.accessToken).not.toStrictEqual(oldTokens!.accessToken)
+            expect(newTokens!.refreshToken).not.toStrictEqual(oldTokens!.refreshToken)
+
+            const wrongJwtToken = await jwtService.getNewRefreshToken('wrongJwtToken')
+            expect(wrongJwtToken).toBeNull()
+
+            const blockedToken = await jwtService.getNewRefreshToken(oldTokens!.refreshToken)
+            expect(blockedToken).toBeNull()
+
+
+        });
     })
 
     // describe('refresh-token endpoint', () => {
