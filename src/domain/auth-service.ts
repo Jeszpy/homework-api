@@ -17,12 +17,9 @@ export class AuthService implements IAuthService {
         if (!user) {
             return false
         }
-        if (user.emailConfirmation.isConfirmed) {
-            return true
-        } else {
-            return false
-        }
+        return user.emailConfirmation.isConfirmed
     }
+
 
     async confirmEmail(code: string): Promise<boolean | null> {
         const confirmationDate = new Date()
@@ -75,7 +72,7 @@ export class AuthService implements IAuthService {
         return true
     }
 
-    async findCodeInDB(code: string): Promise<UserAccountDBType | null>{
+    async findCodeInDB(code: string): Promise<UserAccountDBType | null> {
         return this.usersRepository.findCodeInDB(code)
     }
 }
