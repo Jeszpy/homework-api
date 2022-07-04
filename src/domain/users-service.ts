@@ -26,13 +26,9 @@ export class UsersService implements IUsersService {
 
     async createUser(login: string, email: string, password: string): Promise<UserIdAndLoginType | null> {
         const emailInDB = await this.usersRepository.findOneUserByEmail(email)
-        if (emailInDB) {
-            return null
-        }
+        if (emailInDB) return null
         const loginInDB = await this.usersRepository.findOneUserByLogin(login)
-        if (loginInDB) {
-            return null
-        }
+        if (loginInDB) return null
         const hash = await argon2.hash(password);
         const newUser: UserAccountDBType = {
             accountData: {

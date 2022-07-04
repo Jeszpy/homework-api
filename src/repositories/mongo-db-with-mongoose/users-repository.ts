@@ -44,7 +44,7 @@ export class UsersRepository implements IUsersRepository, IAuthRepository {
     }
 
     async deleteUserById(id: string): Promise<boolean> {
-        const isUserDeleted = await this.usersCollection.deleteOne({accountData: id})
+        const isUserDeleted = await this.usersCollection.deleteOne({'accountData.id': id})
         return isUserDeleted.deletedCount === 1
     }
 
