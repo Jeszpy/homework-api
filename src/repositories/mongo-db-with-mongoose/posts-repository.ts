@@ -11,7 +11,7 @@ export class PostsRepository implements IPostsRepository {
     }
 
     async getAllPosts(searchNameTerm: FilterQuery<PostType>, pageNumber: number, pageSize: number): Promise<PostType[]> {
-        const posts = await this.postsCollection.find(searchNameTerm, {
+        const posts = await this.postsCollection.find({title: {$regex: searchNameTerm ? searchNameTerm : ''}}, {
             _id: false,
             __v: false
         }).skip((pageNumber - 1) * pageSize).limit(pageSize)

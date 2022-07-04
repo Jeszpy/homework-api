@@ -44,18 +44,17 @@ export class AuthService implements IAuthService {
 
     async registrationEmailResending(email: string): Promise<boolean> {
         const user = await this.usersRepository.getOneUserByEmail(email)
-        if (user!.emailConfirmation.isConfirmed) {
-            return false
-        }
+        if (!user) return false
+        if (user.emailConfirmation.isConfirmed) return false
         const newUserInfo: UserAccountDBType = {
-            accountData: user!.accountData,
+            accountData: user.accountData,
             emailConfirmation: {
-                isConfirmed: user!.emailConfirmation.isConfirmed,
+                isConfirmed: user.emailConfirmation.isConfirmed,
                 confirmationCode: uuidv4(),
                 expirationDate: addMinutes(new Date(), 3),
-                sentEmails: user!.emailConfirmation.sentEmails
+                sentEmails: user.emailConfirmation.sentEmails
             },
-            loginAttempts: user!.loginAttempts
+            loginAttempts: user.loginAttempts
 
         }
         await this.usersRepository.updateOneUserByEmail(email, newUserInfo)
@@ -63,10 +62,10 @@ export class AuthService implements IAuthService {
             id: uuidv4(),
             email,
             subject: 'registration-email-resending',
-            userLogin: user!.accountData.login,
+            userLogin: user.accountData.login,
             confirmationCode: newUserInfo.emailConfirmation.confirmationCode,
             status: 'pending',
-            createdAt: user!.accountData.createdAt
+            createdAt: user.accountData.createdAt
         }
         await this.emailsRepository.insertEmailToQueue(emailInfo)
         return true

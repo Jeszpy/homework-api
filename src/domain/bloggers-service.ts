@@ -1,6 +1,6 @@
 import {pagination, PaginationResultType} from "../application/pagination";
 import {v4 as uuidv4} from "uuid";
-import {BloggerType, BloggerWithDateType} from "../types/bloggers";
+import {BloggerType} from "../types/bloggers";
 import {Filter} from "mongodb";
 import {IPostsRepository} from "./posts-service";
 import {IBloggersService} from "../presentation/BloggersController";

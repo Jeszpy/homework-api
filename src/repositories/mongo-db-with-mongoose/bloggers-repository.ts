@@ -11,14 +11,12 @@ export class BloggersRepository implements IBloggersRepository {
     }
 
     async getAllBloggers(filter: FilterQuery<BloggerType>, pageNumber: number, pageSize: number): Promise<BloggerType[]> {
-        const bloggers: BloggerType[] = await this.bloggersCollection.find(filter, {_id: false, __v: false})
+        const bloggers: BloggerType[] = await this.bloggersCollection.find({name: {$regex: filter ? filter : ''}}, {_id: false, __v: false})
             .skip((pageNumber-1) * pageSize)
             .limit(pageSize)
             .lean()
         return bloggers
     }
-
-
 
     async createNewBlogger(newBlogger: BloggerType): Promise<BloggerType> {
         await this.bloggersCollection.create({...newBlogger})

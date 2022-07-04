@@ -7,23 +7,25 @@ import mongoose from "mongoose";
 import {EmailsRepository} from "../repositories/mongo-db-with-mongoose/emails-repository";
 import {JWTService} from "../application/jwt-service";
 import {EmailType} from "../types/emails";
-import {UserIdAndLoginType, UserInfoType} from "../types/user";
+import {UserInfoType} from "../types/user";
 
 describe('integration tests for AuthService', () => {
 
     let mongoServer: MongoMemoryServer
 
-    const authService = ioc.get<AuthService>(TYPES.IAuthService)
     const usersService = ioc.get<UsersService>(TYPES.IUsersService)
-    const emailRepository = ioc.get<EmailsRepository>(TYPES.IEmailsRepository)
     const jwtService = ioc.get<JWTService>(TYPES.JWTService)
+    const authService = ioc.get<AuthService>(TYPES.IAuthService)
+    const emailRepository = ioc.get<EmailsRepository>(TYPES.IEmailsRepository)
 
     const login = 'validLogin'
     const email = 'gleb.luk.go@gmail.com'
     const password = 'validPassword'
+    const newLogin = 'validLogin1'
+    const newEmail = 'hleb.lukashonak@gmail.com'
+    let confirmationCode = ''
 
     beforeAll(async () => {
-        // TODO: добавить тестовые данные
         mongoServer = await MongoMemoryServer.create()
         const mongoUri = mongoServer.getUri()
         await mongoose.connect(mongoUri)
@@ -35,12 +37,13 @@ describe('integration tests for AuthService', () => {
     let accessToken: string
     let refreshToken: string
 
-    describe('createUser && getUserInfoById && getEmailForQueue for sending ', () => {
+    describe('createUser && getUserInfoById', () => {
 
         it('createUser and getUserInfoById', async () => {
 
             const newUser = expect.getState().newUser
             expect(newUser).not.toBeUndefined()
+
             const userId = newUser.id
             const createdUser = await usersService.getUserInfoById(userId) as UserInfoType
 
@@ -49,20 +52,16 @@ describe('integration tests for AuthService', () => {
 
         })
 
-
-        it('getEmailForQueue', async () => {
-
-            const emailInQueue = await emailRepository.getEmailFromQueue() as EmailType
-
-            expect(emailInQueue.email).toBe(email)
-            expect(emailInQueue.userLogin).toBe(login)
-            expect(emailInQueue.status).toBe('pending')
-            expect(emailInQueue.subject).toBe('registration')
-            expect(emailInQueue.confirmationCode).not.toBeNull()
+        it('should return error because user.login not unique', async () => {
+            const newUser = await usersService.createUser(login, newEmail, password)
+            expect(newUser).toBeNull()
         })
 
+        it('should return error because user.email not unique', async () => {
+            const newUser = await usersService.createUser(newLogin, email, password)
+            expect(newUser).toBeNull()
+        })
     })
-
 
     describe('login', () => {
 
@@ -77,14 +76,6 @@ describe('integration tests for AuthService', () => {
             expect(tokens).not.toBeNull()
 
         });
-        it('should return errors because email and login not unique', async () => {
-            await usersService.createUser(login, email, password)
-            const wrongNewUser = await usersService.createUser(login, email, password)
-
-            expect(wrongNewUser).toBeNull()
-
-        });
-
     })
 
     describe('getNewRefreshToken', () => {
@@ -112,23 +103,59 @@ describe('integration tests for AuthService', () => {
         });
     })
 
-    // describe('refresh-token endpoint', () => {
-    //
-    //     const jwtService = ioc.get<JWTService>(TYPES.JWTService)
-    //
-    //     let accessToken
-    //     let refreshToken
-    //
-    //     it('should return new access and refresh tokens', async () => {
-    //         const tokens = await jwtService.createJWT(login, password)
-    //
-    //
-    //         expect(tokens).not.toBeNull()
-    //
-    //     })
-    // })
+    describe('confirmEmail', () => {
+        it('should return false for unconfirmed code', async () => {
+            const email = await emailRepository.getEmailFromQueue() as EmailType
+            confirmationCode = email.confirmationCode
+
+            const isCodeConfirmed = await authService.isCodeConfirmed(confirmationCode)
+            expect(isCodeConfirmed).toBeFalsy()
+        });
+
+        it('should return error for invalid confirmation code', async () => {
+            const invalidConfirmationCode = 'badConfirmationCode'
+
+            const invalidConfirmEmail = await authService.confirmEmail(invalidConfirmationCode)
+            expect(invalidConfirmEmail).toBeNull()
+
+        });
+
+        it('confirmEmail', async () => {
+            const confirmEmail = await authService.confirmEmail(confirmationCode)
+            expect(confirmEmail).toBeTruthy()
+        })
+
+        it('should return true for confirmed code', async () => {
+            const isCodeConfirmed = await authService.isCodeConfirmed(confirmationCode)
+            expect(isCodeConfirmed).toBeTruthy()
+        });
+    })
+
+    describe('registrationEmailResending', () => {
+        it('should return error because email no in DB', async () => {
+            const registrationEmailResending = await authService.registrationEmailResending(newEmail)
+            expect(registrationEmailResending).toBeFalsy()
+        })
+
+        it('should return false because code already confirmed', async () => {
+            const registrationEmailResending = await authService.registrationEmailResending(email)
+            expect(registrationEmailResending).toBeFalsy()
+        })
+        it('should return true for new user/confirmationCode', async () => {
+            const regEmail = 'newEmail@gmail.com'
+            const newUser = await usersService.createUser('login', regEmail, 'password')
+            expect(newUser).not.toBeNull()
+
+            const email = await emailRepository.getEmailFromQueue() as EmailType
+            const newConfirmationCode = email.confirmationCode
+            expect(newConfirmationCode).not.toStrictEqual(confirmationCode)
+
+            const registrationEmailResending = await authService.registrationEmailResending(regEmail)
+            expect(registrationEmailResending).toBeTruthy()
+        })
 
 
+    })
     afterAll(async () => {
         await mongoose.disconnect()
         await mongoServer.stop()
